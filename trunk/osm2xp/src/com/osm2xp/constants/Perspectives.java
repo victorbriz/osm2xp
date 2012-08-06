@@ -17,4 +17,6 @@ public class Perspectives {
 	public static final String PERSPECTIVE_FLY_LEGACY = "com.osm2xp.flyLegacyConfigurationPerspective";
 	public static final String PERSPECTIVE_OSM = "com.osm2xp.osmConfigurationPerspective";
 	public static final String PERSPECTIVE_CONSOLE = "com.osm2xp.consoleConfigurationPerspective";
+	public static final String PERSPECTIVE_FLIGHT_GEAR = "com.osm2xp.flightGearConfigurationPerspective";
+	public static final Object PERSPECTIVE_G2XPL = "com.osm2xp.g2xplConfigurationPerspective";;
 }

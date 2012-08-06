@@ -17,14 +17,14 @@ import com.osm2xp.utils.helpers.GuiOptionsHelper;
 import com.osm2xp.utils.logging.Osm2xpLogger;
 
 /**
- * CommandFsxMode.
+ * CommandOsmMode.
  * 
  * @author Benjamin Blanchet
  * 
  */
-public class CommandFsxMode implements IHandler {
+public class CommandFlightGearMode implements IHandler {
 
-	private static final String HTML_FILE = "html/modes/fsx/index.html";
+	private static final String HTML_FILE = "html/modes/flightGear/index.html";
 
 	@Override
 	public void addHandlerListener(IHandlerListener handlerListener) {
@@ -38,8 +38,8 @@ public class CommandFsxMode implements IHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		GuiOptionsHelper.getOptions().setOutputFormat(
-				Perspectives.PERSPECTIVE_FSX);
-		MiscUtils.switchPerspective(Perspectives.PERSPECTIVE_FSX);
+				Perspectives.PERSPECTIVE_FLIGHT_GEAR);
+		MiscUtils.switchPerspective(Perspectives.PERSPECTIVE_FLIGHT_GEAR);
 		String url;
 		try {
 			url = FileLocator.toFileURL(

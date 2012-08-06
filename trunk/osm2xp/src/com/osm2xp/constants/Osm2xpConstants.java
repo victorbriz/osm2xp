@@ -27,13 +27,5 @@ public class Osm2xpConstants {
 	public static final String UTILS_PATH = ResourcesPlugin.getWorkspace()
 			.getRoot().getLocation()
 			+ File.separator + "resources" + File.separatorChar + "utils";
-	public static final String OUTPUT_FORMAT_XPLANE9 = "Xplane 9";
-	public static final String OUTPUT_FORMAT_XPLANE10 = "Xplane 10";
-	public static final String OUTPUT_FORMAT_OSM = "OpenStreetMap (xml)";
-	public static final String OUTPUT_FORMAT_CONSOLE = "Console";
-	public static final String OUTPUT_FORMAT_WAVEFRONT = "WaveFront (.obj)";
-	public static final String OUTPUT_FORMAT_FSX = "Flight Simulator X";
-	public static final String OUTPUT_FORMAT_FLYLEGAGY = "Fly! Legacy";
-	public static final String OUTPUT_FORMAT_G2XPL = "G2xpl binding file";
 
 }

@@ -22,47 +22,12 @@ import com.osm2xp.utils.logging.Osm2xpLogger;
 public class MiscUtils {
 
 	/**
-	 * return the perspective id
+	 * switch to another perspective.
 	 * 
-	 * @param outputMode
-	 * @return
+	 * @param perspectiveID
+	 *            rcp perspective id.
 	 */
-	public static String getPerspectiveId(String outputMode) {
-		String perspectiveID = null;
-		if (outputMode.equalsIgnoreCase(Osm2xpConstants.OUTPUT_FORMAT_XPLANE9)) {
-			perspectiveID = Perspectives.PERSPECTIVE_XPLANE9;
-		} else if (outputMode
-				.equalsIgnoreCase(Osm2xpConstants.OUTPUT_FORMAT_XPLANE10)) {
-			perspectiveID = Perspectives.PERSPECTIVE_XPLANE10;
-		} else if (outputMode
-				.equalsIgnoreCase(Osm2xpConstants.OUTPUT_FORMAT_FSX)) {
-			perspectiveID = Perspectives.PERSPECTIVE_FSX;
-		} else if (outputMode
-				.equalsIgnoreCase(Osm2xpConstants.OUTPUT_FORMAT_WAVEFRONT)) {
-			perspectiveID = Perspectives.PERSPECTIVE_WAVEFRONT;
-		} else if (outputMode
-				.equalsIgnoreCase(Osm2xpConstants.OUTPUT_FORMAT_FLYLEGAGY)) {
-			perspectiveID = Perspectives.PERSPECTIVE_FLY_LEGACY;
-		} else if (outputMode
-				.equalsIgnoreCase(Osm2xpConstants.OUTPUT_FORMAT_OSM)) {
-			perspectiveID = Perspectives.PERSPECTIVE_OSM;
-		} else if (outputMode
-				.equalsIgnoreCase(Osm2xpConstants.OUTPUT_FORMAT_CONSOLE)) {
-			perspectiveID = Perspectives.PERSPECTIVE_CONSOLE;
-		} else {
-			perspectiveID = Perspectives.PERSPECTIVE_STARTUP;
-		}
-
-		return perspectiveID;
-	}
-
-	/**
-	 * switch to another perspective
-	 * 
-	 * @param outputMode
-	 */
-	public static void switchPerspective(String outputMode) {
-		String perspectiveID = getPerspectiveId(outputMode);
+	public static void switchPerspective(String perspectiveID) {
 		if (perspectiveID != null) {
 			// switch perspective
 			IWorkbench workbench = PlatformUI.getWorkbench();

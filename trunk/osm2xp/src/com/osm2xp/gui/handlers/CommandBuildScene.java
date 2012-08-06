@@ -7,6 +7,7 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
 
 import com.osm2xp.constants.Osm2xpConstants;
+import com.osm2xp.constants.Perspectives;
 import com.osm2xp.controllers.BuildController;
 import com.osm2xp.exceptions.Osm2xpBusinessException;
 import com.osm2xp.gui.dialogs.utils.Osm2xpDialogsHelper;
@@ -62,9 +63,9 @@ public class CommandBuildScene implements IHandler {
 		}
 		// Xplane validation
 		if (GuiOptionsHelper.getOptions().getOutputFormat()
-				.equals(Osm2xpConstants.OUTPUT_FORMAT_XPLANE10)
+				.equals(Perspectives.PERSPECTIVE_XPLANE10)
 				|| GuiOptionsHelper.getOptions().getOutputFormat()
-						.equals(Osm2xpConstants.OUTPUT_FORMAT_XPLANE9)) {
+						.equals(Perspectives.PERSPECTIVE_XPLANE9)) {
 
 			if (XplaneOptionsHelper.getOptions().getFacadeSet() == null) {
 				errors.append("-No facade set selected.\n");
@@ -72,7 +73,7 @@ public class CommandBuildScene implements IHandler {
 		}
 		// FSX validation
 		if (GuiOptionsHelper.getOptions().getOutputFormat()
-				.equals(Osm2xpConstants.OUTPUT_FORMAT_FSX)) {
+				.equals(Perspectives.PERSPECTIVE_FSX)) {
 			if (StringUtils.isBlank(FsxOptionsHelper.getOptions()
 					.getBglCompPath())) {
 				errors.append("-bglComp.exe location not set!\n");

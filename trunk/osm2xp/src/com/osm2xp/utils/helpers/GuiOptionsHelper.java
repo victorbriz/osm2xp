@@ -8,6 +8,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
 import com.osm2xp.constants.Osm2xpConstants;
+import com.osm2xp.constants.Perspectives;
 import com.osm2xp.exceptions.Osm2xpBusinessException;
 import com.osm2xp.model.options.GuiOptions;
 import com.osm2xp.model.osm.Tag;
@@ -50,17 +51,17 @@ public class GuiOptionsHelper {
 	 */
 	public static boolean isOutputFormatAFileGenerator() {
 		return (getOptions().getOutputFormat().equalsIgnoreCase(
-				Osm2xpConstants.OUTPUT_FORMAT_FLYLEGAGY)
+				Perspectives.PERSPECTIVE_FLY_LEGACY)
 				|| getOptions().getOutputFormat().equalsIgnoreCase(
-						Osm2xpConstants.OUTPUT_FORMAT_XPLANE10)
+						Perspectives.PERSPECTIVE_XPLANE10)
 				|| getOptions().getOutputFormat().equalsIgnoreCase(
-						Osm2xpConstants.OUTPUT_FORMAT_XPLANE9)
+						Perspectives.PERSPECTIVE_XPLANE9)
 				|| getOptions().getOutputFormat().equalsIgnoreCase(
-						Osm2xpConstants.OUTPUT_FORMAT_WAVEFRONT)
+						Perspectives.PERSPECTIVE_WAVEFRONT)
 				|| getOptions().getOutputFormat().equalsIgnoreCase(
-						Osm2xpConstants.OUTPUT_FORMAT_G2XPL) || getOptions()
+						Perspectives.PERSPECTIVE_OSM) || getOptions()
 				.getOutputFormat().equalsIgnoreCase(
-						Osm2xpConstants.OUTPUT_FORMAT_OSM));
+						Perspectives.PERSPECTIVE_FLIGHT_GEAR));
 	}
 
 	/**
@@ -68,7 +69,7 @@ public class GuiOptionsHelper {
 	 */
 	private static GuiOptions createNewGuiOptionsBean() {
 		GuiOptions result = new GuiOptions(false, false, false, true, null,
-				Osm2xpConstants.OUTPUT_FORMAT_XPLANE9, false,
+				Perspectives.PERSPECTIVE_XPLANE10, false,
 				new ArrayList<String>());
 		return result;
 	}

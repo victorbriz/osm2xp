@@ -9,6 +9,7 @@ import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.core.runtime.FileLocator;
 
 import com.osm2xp.constants.Osm2xpConstants;
+import com.osm2xp.constants.Perspectives;
 import com.osm2xp.gui.Activator;
 import com.osm2xp.gui.views.panels.generic.OutPutFormatPanel;
 import com.osm2xp.utils.MiscUtils;
@@ -37,8 +38,8 @@ public class CommandXplane10Mode implements IHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		GuiOptionsHelper.getOptions().setOutputFormat(
-				Osm2xpConstants.OUTPUT_FORMAT_XPLANE10);
-		MiscUtils.switchPerspective(Osm2xpConstants.OUTPUT_FORMAT_XPLANE10);
+				Perspectives.PERSPECTIVE_XPLANE10);
+		MiscUtils.switchPerspective(Perspectives.PERSPECTIVE_XPLANE10);
 		String url;
 		try {
 			url = FileLocator.toFileURL(

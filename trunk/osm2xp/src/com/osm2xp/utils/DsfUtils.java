@@ -12,6 +12,7 @@ import java.util.GregorianCalendar;
 import math.geom2d.Point2D;
 
 import com.osm2xp.constants.Osm2xpConstants;
+import com.osm2xp.constants.Perspectives;
 import com.osm2xp.exceptions.Osm2xpBusinessException;
 import com.osm2xp.exceptions.Osm2xpTechnicalException;
 import com.osm2xp.model.xplane.XplaneDsfObject;
@@ -317,7 +318,7 @@ public class DsfUtils {
 		}
 
 		if (GuiOptionsHelper.getOptions().getOutputFormat()
-				.equals(Osm2xpConstants.OUTPUT_FORMAT_XPLANE10)) {
+				.equals(Perspectives.PERSPECTIVE_XPLANE10)) {
 
 			if (XplaneOptionsHelper.getOptions().isExcludePol()) {
 				sb.append("PROPERTY sim/exclude_pol " + tileCoordinate);

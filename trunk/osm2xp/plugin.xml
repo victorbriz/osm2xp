@@ -58,6 +58,11 @@
             id="com.osm2xp.consoleConfigurationPerspective"
             name="console configuration">
       </perspective>
+      <perspective
+            class="com.osm2xp.gui.perspectives.FlightGearConfigurationPerspective"
+            id="com.osm2xp.flightGearConfigurationPerspective"
+            name="flight gear configuration">
+      </perspective>
    </extension>
    <extension
          point="org.eclipse.ui.views">
@@ -461,6 +466,32 @@
                relative="com.osm2xp.viewSceneryTab">
          </view>
       </perspectiveExtension>
+      <perspectiveExtension
+            targetID="com.osm2xp.flightGearConfigurationPerspective">
+         <view
+               closeable="false"
+               id="com.osm2xp.viewSceneryTab"
+               minimized="false"
+               relationship="top"
+               relative="org.eclipse.ui.editorss"
+               standalone="true">
+         </view>
+         <view
+               closeable="true"
+               id="org.eclipse.help.ui.HelpView"
+               minimized="false"
+               ratio=".70f"
+               relationship="right"
+               relative="com.osm2xp.viewSceneryTab">
+         </view>
+         <view
+               id="com.osm2xp.viewLastFiles"
+               minimized="false"
+               ratio="0.15f"
+               relationship="left"
+               relative="com.osm2xp.viewSceneryTab">
+         </view>
+      </perspectiveExtension>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -577,6 +608,13 @@
                style="push"
                tooltip="Console mode">
          </command>
+         <command
+               commandId="osm2xp.command.flightGearMode"
+               icon="images/toolbarsIcons/flightGear.png"
+               label=" "
+               style="push"
+               tooltip="FLightGear mode">
+         </command>
       </menuContribution>
    </extension>
    <extension
@@ -670,6 +708,11 @@
             defaultHandler="com.osm2xp.gui.handlers.modes.CommandConsoleMode"
             id="osm2xp.command.consoleMode"
             name="consoleMode">
+      </command>
+      <command
+            defaultHandler="com.osm2xp.gui.handlers.modes.CommandFlightGearMode"
+            id="osm2xp.command.flightGearMode"
+            name="flightGearMode">
       </command>
    </extension>
    <extension
