@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 import com.osm2xp.constants.Osm2xpConstants;
+import com.osm2xp.constants.Perspectives;
 import com.osm2xp.utils.helpers.GuiOptionsHelper;
 import com.osm2xp.utils.helpers.XplaneOptionsHelper;
 
@@ -77,7 +78,7 @@ public class SceneryExclusionsPanel extends Composite {
 				.observeValue(XplaneOptionsHelper.getOptions(), "excludeNet"));
 
 		if (GuiOptionsHelper.getOptions().getOutputFormat()
-				.equals(Osm2xpConstants.OUTPUT_FORMAT_XPLANE10)) {
+				.equals(Perspectives.PERSPECTIVE_XPLANE10)) {
 			Button btnCheckExcludeBch = new Button(this, SWT.CHECK);
 			btnCheckExcludeBch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 					false, false, 1, 1));

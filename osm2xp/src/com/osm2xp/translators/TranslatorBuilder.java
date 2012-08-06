@@ -6,18 +6,20 @@ import java.util.List;
 import math.geom2d.Point2D;
 
 import com.osm2xp.constants.Osm2xpConstants;
+import com.osm2xp.constants.Perspectives;
 import com.osm2xp.exceptions.Osm2xpBusinessException;
 import com.osm2xp.model.facades.FacadeSet;
 import com.osm2xp.model.osm.Relation;
 import com.osm2xp.model.stats.GenerationStats;
 import com.osm2xp.translators.impl.ConsoleTranslatorImpl;
+import com.osm2xp.translators.impl.FlightGearTranslatorImpl;
 import com.osm2xp.translators.impl.FsxBgTranslatorImpl;
 import com.osm2xp.translators.impl.G2xplTranslatorImpl;
 import com.osm2xp.translators.impl.OsmTranslatorImpl;
 import com.osm2xp.translators.impl.WavefrontTranslatorImpl;
 import com.osm2xp.translators.impl.Xplane10TranslatorImpl;
 import com.osm2xp.translators.impl.Xplane9TranslatorImpl;
-import com.osm2xp.translators.impl.flyLegacyTranslatorImpl;
+import com.osm2xp.translators.impl.FlyLegacyTranslatorImpl;
 import com.osm2xp.utils.DsfObjectsProvider;
 import com.osm2xp.utils.helpers.FacadeSetHelper;
 import com.osm2xp.utils.helpers.GuiOptionsHelper;
@@ -39,54 +41,61 @@ public class TranslatorBuilder {
 
 	public static ITranslator getTranslator(File currentFile,
 			Point2D currentTile, String folderPath, List<Relation> relationsList) {
-
+		ITranslator result = null;
 		// XPLANE 9 DSF implementation
 		if (GuiOptionsHelper.getOptions().getOutputFormat()
-				.equals(Osm2xpConstants.OUTPUT_FORMAT_XPLANE9)) {
-			return buildXplane9Translator(currentFile, currentTile, folderPath,
-					relationsList);
+				.equals(Perspectives.PERSPECTIVE_XPLANE9)) {
+			result = buildXplane9Translator(currentFile, currentTile,
+					folderPath, relationsList);
 		}
 		// XPLANE 10 DSF implementation
-		if (GuiOptionsHelper.getOptions().getOutputFormat()
-				.equals(Osm2xpConstants.OUTPUT_FORMAT_XPLANE10)) {
-			return buildXplane10Translator(currentFile, currentTile, folderPath);
+		else if (GuiOptionsHelper.getOptions().getOutputFormat()
+				.equals(Perspectives.PERSPECTIVE_XPLANE10)) {
+			result = buildXplane10Translator(currentFile, currentTile,
+					folderPath);
 		}
 		// OSM implementation
-		if (GuiOptionsHelper.getOptions().getOutputFormat()
-				.equals(Osm2xpConstants.OUTPUT_FORMAT_OSM)) {
-			return buildOsmTranslator(currentTile, folderPath);
+		else if (GuiOptionsHelper.getOptions().getOutputFormat()
+				.equals(Perspectives.PERSPECTIVE_OSM)) {
+			result = buildOsmTranslator(currentTile, folderPath);
 		}
 		// DEBUG CONSOLE
-		if (GuiOptionsHelper.getOptions().getOutputFormat()
-				.equals(Osm2xpConstants.OUTPUT_FORMAT_CONSOLE)) {
-			return buildConsoleTranslator(currentTile);
+		else if (GuiOptionsHelper.getOptions().getOutputFormat()
+				.equals(Perspectives.PERSPECTIVE_CONSOLE)) {
+			result = buildConsoleTranslator(currentTile);
 		}
 
 		// WAVEFRONT OBJECT
-		if (GuiOptionsHelper.getOptions().getOutputFormat()
-				.equals(Osm2xpConstants.OUTPUT_FORMAT_WAVEFRONT)) {
-			return buildWavefrontTranslator(currentTile, folderPath);
+		else if (GuiOptionsHelper.getOptions().getOutputFormat()
+				.equals(Perspectives.PERSPECTIVE_WAVEFRONT)) {
+			result = buildWavefrontTranslator(currentTile, folderPath);
 		}
 
 		// FSX TRANSLATOR
-		if (GuiOptionsHelper.getOptions().getOutputFormat()
-				.equals(Osm2xpConstants.OUTPUT_FORMAT_FSX)) {
-			return buildFsxTranslator(currentFile, currentTile, folderPath);
+		else if (GuiOptionsHelper.getOptions().getOutputFormat()
+				.equals(Perspectives.PERSPECTIVE_FSX)) {
+			result = buildFsxTranslator(currentFile, currentTile, folderPath);
 		}
 
 		// G2XPL TRANSLATOR
-		if (GuiOptionsHelper.getOptions().getOutputFormat()
-				.equals(Osm2xpConstants.OUTPUT_FORMAT_G2XPL)) {
-			return buildG2xplTranslator(currentTile, folderPath);
+		else if (GuiOptionsHelper.getOptions().getOutputFormat()
+				.equals(Perspectives.PERSPECTIVE_G2XPL)) {
+			result = buildG2xplTranslator(currentTile, folderPath);
 		}
 
 		// FLY! LEGACY TRANSLATOR
-		if (GuiOptionsHelper.getOptions().getOutputFormat()
-				.equals(Osm2xpConstants.OUTPUT_FORMAT_FLYLEGAGY)) {
-			return buildFlyLegacyTranslator(currentTile, folderPath);
+		else if (GuiOptionsHelper.getOptions().getOutputFormat()
+				.equals(Perspectives.PERSPECTIVE_FLY_LEGACY)) {
+			result = buildFlyLegacyTranslator(currentTile, folderPath);
 		}
 
-		return null;
+		// FLIGHTGEAR TRANSLATOR
+		else if (GuiOptionsHelper.getOptions().getOutputFormat()
+				.equals(Perspectives.PERSPECTIVE_FLIGHT_GEAR)) {
+			result = buildFlightGearTranslator(currentTile, folderPath);
+		}
+
+		return result;
 	}
 
 	/**
@@ -151,12 +160,21 @@ public class TranslatorBuilder {
 	/**
 	 * @param currentTile
 	 * @param folderPath
-	 * @param processor
 	 * @return
 	 */
 	private static ITranslator buildFlyLegacyTranslator(Point2D currentTile,
 			String folderPath) {
-		return new flyLegacyTranslatorImpl(currentTile, folderPath);
+		return new FlyLegacyTranslatorImpl(currentTile, folderPath);
+	}
+
+	/**
+	 * @param currentTile
+	 * @param folderPath
+	 * @return
+	 */
+	private static ITranslator buildFlightGearTranslator(Point2D currentTile,
+			String folderPath) {
+		return new FlightGearTranslatorImpl(currentTile, folderPath);
 	}
 
 	/**

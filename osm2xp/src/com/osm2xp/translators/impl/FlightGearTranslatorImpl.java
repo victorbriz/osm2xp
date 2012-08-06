@@ -1,7 +1,7 @@
 package com.osm2xp.translators.impl;
 
 import java.io.File;
-import java.util.List;
+import java.text.MessageFormat;
 
 import math.geom2d.Point2D;
 import math.geom2d.polygon.LinearRing2D;
@@ -10,24 +10,21 @@ import com.osm2xp.exceptions.Osm2xpBusinessException;
 import com.osm2xp.model.osm.Node;
 import com.osm2xp.model.osm.OsmPolygon;
 import com.osm2xp.model.osm.Relation;
-import com.osm2xp.model.osm.Tag;
 import com.osm2xp.model.osm.Way;
 import com.osm2xp.translators.ITranslator;
 import com.osm2xp.utils.FilesUtils;
 import com.osm2xp.utils.GeomUtils;
 import com.osm2xp.utils.OsmUtils;
-import com.osm2xp.utils.helpers.FlyLegacyOptionsHelper;
 import com.osm2xp.utils.helpers.GuiOptionsHelper;
 import com.osm2xp.utils.logging.Osm2xpLogger;
 
 /**
- * Fly Legacy Translator implementation. Generates a .ofe file, that is used by
- * Fly Legacy simulator to build 3D objects.
+ * FlightGear Translator implementation.
  * 
- * @author Benjamin Blanchet, following Jean Sabatier specifications.
+ * @author Benjamin Blanchet.
  * 
  */
-public class flyLegacyTranslatorImpl implements ITranslator {
+public class FlightGearTranslatorImpl implements ITranslator {
 	/**
 	 * current lat/long tile.
 	 */
@@ -37,13 +34,11 @@ public class flyLegacyTranslatorImpl implements ITranslator {
 	 */
 	private String folderPath;
 	/**
-	 * generated ofe file.
+	 * generated xml file.
 	 */
-	private File ofeFile;
-	/**
-	 * number of generated objects.
-	 */
-	private int cptObjects;
+	private File xmlFile;
+
+	private static final String FLIGHT_GEAR_OBJECT_DECLARATION = "OBJECT_SHARED Models/{0} {1} {2} {3} {4}\n";
 
 	/**
 	 * Constuctor.
@@ -53,35 +48,15 @@ public class flyLegacyTranslatorImpl implements ITranslator {
 	 * @param folderPath
 	 *            folder path.
 	 */
-	public flyLegacyTranslatorImpl(Point2D currentTile, String folderPath) {
+	public FlightGearTranslatorImpl(Point2D currentTile, String folderPath) {
 		super();
 		this.currentTile = currentTile;
 		this.folderPath = folderPath;
 		File file = new File(GuiOptionsHelper.getOptions().getCurrentFilePath());
 		String fileName = file.getName().substring(0,
 				file.getName().indexOf("."));
-		this.ofeFile = new File(this.folderPath + File.separator + fileName
-				+ "_" + currentTile.x + "_" + currentTile.y + ".ofe");
-		writeAreaHeader(currentTile);
-
-	}
-
-	/**
-	 * write Area sequence to fly file.
-	 * 
-	 * @param coordinates
-	 *            Point2D lat/long.
-	 */
-	private void writeAreaHeader(Point2D coordinates) {
-		int latitude = (int) coordinates.x;
-		int longitude = (int) coordinates.y;
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("Area SW[" + latitude + "," + longitude + "]");
-		stringBuilder.append(" NE[" + (latitude + 1) + "," + (longitude + 1)
-				+ "]\n");
-		// add area sequence
-		FilesUtils
-				.writeTextToFile(this.ofeFile, stringBuilder.toString(), true);
+		this.xmlFile = new File(this.folderPath + File.separator + fileName
+				+ "_" + currentTile.x + "_" + currentTile.y + ".stg");
 
 	}
 
@@ -104,27 +79,17 @@ public class flyLegacyTranslatorImpl implements ITranslator {
 			polygon = GeomUtils.simplifyPolygon(polygon);
 		}
 
-		// get list of watched tags that are also in the osm polygon
-		List<Tag> matchingTags = OsmUtils.getMatchingTags(
-				FlyLegacyOptionsHelper.getOptions().getWatchedTagsList()
-						.getTags(), osmPolygon);
-		if (matchingTags != null) {
-			StringBuilder stringBuilder = new StringBuilder();
-			// remove last node for fly specification
-			polygon.removePoint(polygon.getLastPoint());
-			stringBuilder.append("Start " + ++cptObjects + " id="
-					+ osmPolygon.getId() + "\n");
-			// write all the tags for this polygon
-			for (Tag matchingTag : matchingTags) {
-				stringBuilder.append("tag(" + matchingTag.getKey() + "="
-						+ matchingTag.getValue() + ")\n");
-			}
-			for (Point2D point2d : polygon.getVertices()) {
-				stringBuilder
-						.append("V(" + point2d.x + "," + point2d.y + ")\n");
-			}
-			FilesUtils.writeTextToFile(this.ofeFile, stringBuilder.toString(),
-					true);
+		// if the polygon is a building, write it in the xml file.
+		if (OsmUtils.isBuilding(osmPolygon.getTags())) {
+			Point2D centerPoint = GeomUtils.getPolygonCenter(osmPolygon
+					.getPolygon());
+			String objectDeclaration = MessageFormat.format(
+					FLIGHT_GEAR_OBJECT_DECLARATION, new Object[] {
+							"Communications/radio-medium.xml", centerPoint.x,
+							centerPoint.y, 1, 0 });
+			objectDeclaration=objectDeclaration.replaceAll(",", ".");
+			FilesUtils.writeTextToFile(this.xmlFile, objectDeclaration, true);
+
 		}
 
 	}
@@ -136,7 +101,7 @@ public class flyLegacyTranslatorImpl implements ITranslator {
 
 	@Override
 	public void complete() {
-		FilesUtils.writeTextToFile(this.ofeFile, "END", true);
+		FilesUtils.writeTextToFile(this.xmlFile, "END", true);
 		Osm2xpLogger.info("Fly! Legacy buildings file finished.");
 	}
 
