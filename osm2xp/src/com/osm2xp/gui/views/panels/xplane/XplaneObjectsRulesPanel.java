@@ -59,15 +59,17 @@ public class XplaneObjectsRulesPanel extends Composite {
 	private Button btnCheckUsePolygonAngle;
 	private Button btnCheckRandomAngle;
 	private Button btnCheckSimplePolygon;
-	private Spinner spinnerXVectorSize;
-	private Spinner spinnerYVectorSize;
+	private Spinner spinnerXVectorMaxSize;
+	private Spinner spinnerYVectorMaxSize;
 	private Button btnCheckSurfaceCondition;
 	private Spinner spinnerMinArea;
 	private Spinner spinnerMaxArea;
 	private Spinner spinnerAngle;
 	private Spinner spinnerRotationPointX;
 	private Spinner spinnerRotationPointY;
-
+	private Spinner spinnerXVectorMinSize;
+	private Spinner spinnerYVectorMinSize;
+	
 	public XplaneObjectsRulesPanel(final Composite parent, int style) {
 		super(parent, style);
 
@@ -94,8 +96,8 @@ public class XplaneObjectsRulesPanel extends Composite {
 								add(new ObjectFile("the path to an Object file"));
 
 							}
-						}, 0, true, false, false, 0, 0, false, 0, 0,
-								false, false));
+						}, 0, true, false, false, 0, 0, 0, 0, false, 0,
+								0, false, false));
 				tagsTable.getViewer().refresh();
 
 			}
@@ -319,6 +321,8 @@ public class XplaneObjectsRulesPanel extends Composite {
 		spinnerAngle = new Spinner(grpAngle, SWT.BORDER);
 		spinnerAngle.setMaximum(360);
 		new Label(grpAngle, SWT.NONE);
+		new Label(grpAngle, SWT.NONE);
+		new Label(grpAngle, SWT.NONE);
 		spinnerAngle.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
@@ -373,35 +377,61 @@ public class XplaneObjectsRulesPanel extends Composite {
 		btnCheckSizeConditions.setBounds(0, 0, 91, 16);
 		btnCheckSizeConditions.setText("Size conditions");
 
-		Label lblNewLabel = new Label(grpSize, SWT.NONE);
-		lblNewLabel.setBounds(0, 0, 53, 13);
-		lblNewLabel.setText("X vector size : ");
+		Label lblXVectorMaxSize = new Label(grpSize, SWT.NONE);
+		lblXVectorMaxSize.setBounds(0, 0, 53, 13);
+		lblXVectorMaxSize.setText("X vector max size : ");
 
-		spinnerXVectorSize = new Spinner(grpSize, SWT.BORDER);
-		spinnerXVectorSize.addModifyListener(new ModifyListener() {
+		spinnerXVectorMaxSize = new Spinner(grpSize, SWT.BORDER);
+		spinnerXVectorMaxSize.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
-				selectedXplaneObjectTagRule.setxVectorLength(spinnerXVectorSize
-						.getSelection());
+				selectedXplaneObjectTagRule
+						.setxVectorMaxLength(spinnerXVectorMaxSize.getSelection());
 			}
 		});
-		spinnerXVectorSize.setBounds(0, 0, 47, 22);
+		spinnerXVectorMaxSize.setBounds(0, 0, 47, 22);
 		new Label(grpSize, SWT.NONE);
 
-		Label lblNewLabel_1 = new Label(grpSize, SWT.NONE);
-		lblNewLabel_1.setBounds(0, 0, 53, 13);
-		lblNewLabel_1.setText("Y vector size : ");
+		Label lblYVectorMaxSize = new Label(grpSize, SWT.NONE);
+		lblYVectorMaxSize.setBounds(0, 0, 53, 13);
+		lblYVectorMaxSize.setText("Y vector max size : ");
 
-		spinnerYVectorSize = new Spinner(grpSize, SWT.BORDER);
-		spinnerYVectorSize.addModifyListener(new ModifyListener() {
+		spinnerYVectorMaxSize = new Spinner(grpSize, SWT.BORDER);
+		spinnerYVectorMaxSize.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent e) {
-				selectedXplaneObjectTagRule.setyVectorLength(spinnerYVectorSize
-						.getSelection());
+				selectedXplaneObjectTagRule
+						.setyVectorMaxLength(spinnerYVectorMaxSize.getSelection());
 			}
 		});
-		spinnerYVectorSize.setBounds(0, 0, 47, 22);
-
+		spinnerYVectorMaxSize.setBounds(0, 0, 47, 22);
+		new Label(grpSize, SWT.NONE);
+		
+		Label lblXVectorMinSize = new Label(grpSize, SWT.NONE);
+		lblXVectorMinSize.setText("X vector min size : ");
+		
+		spinnerXVectorMinSize = new Spinner(grpSize, SWT.BORDER);
+		spinnerXVectorMinSize.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				selectedXplaneObjectTagRule
+						.setxVectorMinLength(spinnerXVectorMinSize.getSelection());
+			}
+		});
+		spinnerYVectorMaxSize.setBounds(0, 0, 47, 22);
+		new Label(grpSize, SWT.NONE);
+		
+		Label lblYVectorMinSize = new Label(grpSize, SWT.NONE);
+		lblYVectorMinSize.setText("Y vector min size : ");
+		
+		spinnerYVectorMinSize = new Spinner(grpSize, SWT.BORDER);
+		spinnerYVectorMinSize.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				selectedXplaneObjectTagRule
+						.setyVectorMinLength(spinnerYVectorMinSize.getSelection());
+			}
+		});
 		Group grpArea = new Group(composite, SWT.NONE);
 		grpArea.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false,
 				1, 1));
@@ -498,11 +528,11 @@ public class XplaneObjectsRulesPanel extends Composite {
 				.isUsePolygonAngle());
 		btnCheckRandomAngle.setSelection(selectedXplaneObjectTagRule
 				.isRandomAngle());
-		spinnerXVectorSize.setSelection(selectedXplaneObjectTagRule
-				.getxVectorLength());
+		spinnerXVectorMaxSize.setSelection(selectedXplaneObjectTagRule
+				.getxVectorMaxLength());
 		spinnerAngle.setSelection(selectedXplaneObjectTagRule.getAngle());
-		spinnerYVectorSize.setSelection(selectedXplaneObjectTagRule
-				.getyVectorLength());
+		spinnerYVectorMaxSize.setSelection(selectedXplaneObjectTagRule
+				.getyVectorMaxLength());
 		spinnerMinArea.setSelection(selectedXplaneObjectTagRule.getMinArea());
 		spinnerMaxArea.setSelection(selectedXplaneObjectTagRule.getMaxArea());
 		spinnerRotationPointX.setSelection(selectedXplaneObjectTagRule

@@ -16,17 +16,20 @@ import com.osm2xp.model.osm.Tag;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "XplaneObjectTagRule", propOrder = { "angle", "randomAngle",
-		"polygonAngle", "sizeCheck", "xVectorLength", "yVectorLength",
-		"areaCheck", "minArea", "maxArea", "simplePolygonOnly",
-		"usePolygonAngle", "rotationPointX", "rotationPointY" })
+		"polygonAngle", "sizeCheck", "xVectorMinLength", "xVectorMaxLength",
+		"yVectorMinLength", "yVectorMaxLength", "areaCheck", "minArea",
+		"maxArea", "simplePolygonOnly", "usePolygonAngle", "rotationPointX",
+		"rotationPointY" })
 public class XplaneObjectTagRule extends TagsRules {
 
 	protected int angle;
 	protected boolean randomAngle;
 	protected boolean polygonAngle;
 	protected boolean sizeCheck;
-	protected int xVectorLength;
-	protected int yVectorLength;
+	protected int xVectorMinLength;
+	protected int xVectorMaxLength;
+	protected int yVectorMinLength;
+	protected int yVectorMaxLength;
 	protected boolean areaCheck;
 	protected int minArea;
 	protected int maxArea;
@@ -50,8 +53,9 @@ public class XplaneObjectTagRule extends TagsRules {
 	public XplaneObjectTagRule(final Tag tag,
 			final List<ObjectFile> objectsFiles, final int angle,
 			final boolean randomAngle, final boolean polygonAngle,
-			final boolean sizeCheck, final int xVectorLength,
-			final int yVectorLength, final boolean areaCheck,
+			final boolean sizeCheck, final int xVectorMaxLength,
+			final int xVectorMinLength, final int yVectorMinLength,
+			final int yVectorMaxLength, final boolean areaCheck,
 			final int minArea, final int maxArea,
 			final boolean simplePolygonOnly, final boolean usePolygonAngle) {
 		super(tag, objectsFiles);
@@ -59,8 +63,10 @@ public class XplaneObjectTagRule extends TagsRules {
 		this.randomAngle = randomAngle;
 		this.polygonAngle = polygonAngle;
 		this.sizeCheck = sizeCheck;
-		this.xVectorLength = xVectorLength;
-		this.yVectorLength = yVectorLength;
+		this.xVectorMinLength = xVectorMinLength;
+		this.yVectorMaxLength = yVectorMaxLength;
+		this.xVectorMaxLength = xVectorMaxLength;
+		this.yVectorMinLength = yVectorMinLength;
 		this.areaCheck = areaCheck;
 		this.minArea = minArea;
 		this.maxArea = maxArea;
@@ -230,20 +236,36 @@ public class XplaneObjectTagRule extends TagsRules {
 		this.rotationPointY = rotationPointY;
 	}
 
-	public int getxVectorLength() {
-		return xVectorLength;
+	public int getxVectorMinLength() {
+		return xVectorMinLength;
 	}
 
-	public void setxVectorLength(int xVectorLength) {
-		this.xVectorLength = xVectorLength;
+	public void setxVectorMinLength(int xVectorMinLength) {
+		this.xVectorMinLength = xVectorMinLength;
 	}
 
-	public int getyVectorLength() {
-		return yVectorLength;
+	public int getxVectorMaxLength() {
+		return xVectorMaxLength;
 	}
 
-	public void setyVectorLength(int yVectorLength) {
-		this.yVectorLength = yVectorLength;
+	public void setxVectorMaxLength(int xVectorMaxLength) {
+		this.xVectorMaxLength = xVectorMaxLength;
+	}
+
+	public int getyVectorMinLength() {
+		return yVectorMinLength;
+	}
+
+	public void setyVectorMinLength(int yVectorMinLength) {
+		this.yVectorMinLength = yVectorMinLength;
+	}
+
+	public int getyVectorMaxLength() {
+		return yVectorMaxLength;
+	}
+
+	public void setyVectorMaxLength(int yVectorMaxLength) {
+		this.yVectorMaxLength = yVectorMaxLength;
 	}
 
 }

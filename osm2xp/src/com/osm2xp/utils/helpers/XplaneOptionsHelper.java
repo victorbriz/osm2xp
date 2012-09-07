@@ -109,14 +109,14 @@ public class XplaneOptionsHelper extends OptionsHelper {
 				add(new ObjectFile(
 						"opensceneryx/objects/buildings/industrial/wind_turbines/large.obj"));
 			}
-		}, 0, true, false, false, 0, 0, false, 0, 0, false, false));
+		}, 0, true, false, false, 0, 0, 0, 0, false, 0, 0, false, false));
 		XplaneObjectTagRules.add(new XplaneObjectTagRule(new Tag("man_made",
 				"lighthouse"), new ArrayList<ObjectFile>() {
 			{
 				add(new ObjectFile(
 						"opensceneryx/objects/buildings/marine/lighthouses/1.obj"));
 			}
-		}, 0, true, false, false, 0, 0, false, 0, 0, false, false));
+		}, 0, true, false, false, 0, 0, 0, 0, false, 0, 0, false, false));
 		XplaneObjectTagRules.add(new XplaneObjectTagRule(new Tag("man_made",
 				"water_tower"), new ArrayList<ObjectFile>() {
 			{
@@ -125,14 +125,14 @@ public class XplaneOptionsHelper extends OptionsHelper {
 				add(new ObjectFile(
 						"opensceneryx/objects/buildings/industrial/water_towers/cylindrical/2.obj"));
 			}
-		}, 0, true, false, false, 0, 0, false, 0, 0, false, false));
+		}, 0, true, false, false, 0, 0, 0, 0, false, 0, 0, false, false));
 		XplaneObjectTagRules.add(new XplaneObjectTagRule(new Tag("man_made",
 				"crane"), new ArrayList<ObjectFile>() {
 			{
 				add(new ObjectFile(
 						"opensceneryx/objects/buildings/industrial/cranes/1.obj"));
 			}
-		}, 0, true, false, false, 0, 0, false, 0, 0, false, false));
+		}, 0, true, false, false, 0, 0, 0, 0, false, 0, 0, false, false));
 		XplaneObjectsRulesList result = new XplaneObjectsRulesList(
 				XplaneObjectTagRules);
 		return result;
