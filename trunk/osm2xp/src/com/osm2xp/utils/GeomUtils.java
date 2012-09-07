@@ -139,8 +139,23 @@ public class GeomUtils {
 		return dist * 1000;
 	}
 
-	public static boolean isRectangleBigEnoughForObject(int xLength,
-			int yLength, LinearRing2D poly) {
+	/**
+	 * Check if the object fits the polygon.
+	 * 
+	 * @param xMaxLength
+	 *            object x max length.
+	 * @param yMaxLength
+	 *            object y max length.
+	 * @param xMinLength
+	 *            bject x min length.
+	 * @param yMinLength
+	 *            bject y min length.
+	 * @param poly
+	 *            osm polygon.
+	 * @return true if the object can be used for this polygon.
+	 */
+	public static boolean isRectangleBigEnoughForObject(int xMaxLength,
+			int yMaxLength, int xMinLength, int yMinLength, LinearRing2D poly) {
 		Boolean result = false;
 		if (poly.getVertices().size() == 5) {
 			double segment1 = latLongDistance(poly.getVertex(0).x,
@@ -149,10 +164,11 @@ public class GeomUtils {
 			double segment2 = latLongDistance(poly.getVertex(1).x,
 					poly.getVertex(1).y, poly.getVertex(2).x,
 					poly.getVertex(2).y);
-			result = (((segment1 > xLength) && (segment1 - xLength < 1))
-					&& ((segment2 > yLength) && (segment2 - yLength < 1)) || ((segment2 > xLength) && (segment2
-					- xLength < 1))
-					&& ((segment1 > yLength) && (segment1 - yLength < 1)));
+			result = segment1 < xMaxLength && segment1 > xMinLength
+					&& segment2 < yMaxLength && segment2 > yMinLength
+					|| segment1 < yMaxLength && segment1 > yMinLength
+					&& segment2 < xMaxLength && segment2 > xMinLength;
+
 		}
 		return result;
 	}

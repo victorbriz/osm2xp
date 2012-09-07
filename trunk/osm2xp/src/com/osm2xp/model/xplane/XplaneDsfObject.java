@@ -66,13 +66,13 @@ public class XplaneDsfObject {
 						ptOrigin.x, ptOrigin.y);
 				double segmentY = GeomUtils.latLongDistance(ptOrigin.x,
 						ptOrigin.y, ptY.x, ptY.y);
-				Boolean dimensionsCheck = false;
 				// check if the rule x/y segments "fits" the current osm
 				// polygon
-				dimensionsCheck = ((segmentX > rule.getxVectorLength()) && (segmentX
-						- rule.getxVectorLength() < 1))
-						&& ((segmentY > rule.getyVectorLength()) && (segmentY
-								- rule.getyVectorLength() < 1));
+				Boolean xVectorCheck = segmentX > rule.getxVectorMinLength()
+						&& segmentX < rule.getxVectorMaxLength();
+				Boolean yVectorCheck = segmentY > rule.getyVectorMinLength()
+						&& segmentY < rule.getyVectorMaxLength();
+				Boolean dimensionsCheck = xVectorCheck && yVectorCheck;
 
 				// if that's the case, compute the rotation point (origin)
 				// of

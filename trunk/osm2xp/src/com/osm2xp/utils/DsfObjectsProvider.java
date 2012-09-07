@@ -534,8 +534,10 @@ public class DsfObjectsProvider {
 
 					Boolean checkSize = GeomUtils
 							.isRectangleBigEnoughForObject(
-									rule.getxVectorLength(),
-									rule.getyVectorLength(), polygon);
+									rule.getxVectorMaxLength(),
+									rule.getyVectorMaxLength(),
+									rule.getxVectorMinLength(),
+									rule.getyVectorMinLength(), polygon);
 
 					Boolean checkSimplePoly = !rule.isSimplePolygonOnly()
 							|| (rule.isSimplePolygonOnly() && osmPolygon
