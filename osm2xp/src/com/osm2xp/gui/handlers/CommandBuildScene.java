@@ -67,7 +67,8 @@ public class CommandBuildScene implements IHandler {
 				|| GuiOptionsHelper.getOptions().getOutputFormat()
 						.equals(Perspectives.PERSPECTIVE_XPLANE9)) {
 
-			if (XplaneOptionsHelper.getOptions().getFacadeSet() == null) {
+			if (XplaneOptionsHelper.getOptions().isGenerateBuildings()
+					&& XplaneOptionsHelper.getOptions().getFacadeSet() == null) {
 				errors.append("-No facade set selected.\n");
 			}
 		}

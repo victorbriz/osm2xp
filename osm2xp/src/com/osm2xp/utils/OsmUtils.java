@@ -145,7 +145,7 @@ public class OsmUtils {
 	 * @return
 	 */
 	public static List<TagsRules> getMatchingRules(
-			List<TagsRules> tagsRulesList, OsmPolygon osmPolygon) {
+			List<? extends TagsRules> tagsRulesList, OsmPolygon osmPolygon) {
 
 		List<TagsRules> result = new ArrayList<TagsRules>();
 		for (TagsRules tagsRules : tagsRulesList) {

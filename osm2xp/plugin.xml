@@ -93,7 +93,7 @@
       <view
             class="com.osm2xp.gui.views.Xplane3DObjectsView"
             id="com.osm2xp.viewObjectsTab"
-            name="Objects"
+            name="xplane 3D Objects"
             restorable="true">
       </view>
       <view
@@ -142,6 +142,12 @@
             class="com.osm2xp.gui.views.Osm2xpNewsView"
             id="com.osm2xp.viewOsm2xpNews"
             name="news"
+            restorable="true">
+      </view>
+      <view
+            class="com.osm2xp.gui.views.FlightGear3DObjectsView"
+            id="com.osm2xp.viewFlightGearObjectsTab"
+            name="FlightGear 3D Objects"
             restorable="true">
       </view>
    </extension>
@@ -490,6 +496,14 @@
                ratio="0.15f"
                relationship="left"
                relative="com.osm2xp.viewSceneryTab">
+         </view>
+         <view
+               closeable="false"
+               id="com.osm2xp.viewFlightGearObjectsTab"
+               minimized="false"
+               relationship="stack"
+               relative="com.osm2xp.viewSceneryTab"
+               standalone="true">
          </view>
       </perspectiveExtension>
    </extension>

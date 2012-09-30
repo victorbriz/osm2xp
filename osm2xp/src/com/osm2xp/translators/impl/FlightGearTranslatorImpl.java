@@ -2,11 +2,17 @@ package com.osm2xp.translators.impl;
 
 import java.io.File;
 import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.List;
 
 import math.geom2d.Point2D;
 import math.geom2d.polygon.LinearRing2D;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.osm2xp.exceptions.Osm2xpBusinessException;
+import com.osm2xp.model.options.ObjectFile;
+import com.osm2xp.model.options.TagsRules;
 import com.osm2xp.model.osm.Node;
 import com.osm2xp.model.osm.OsmPolygon;
 import com.osm2xp.model.osm.Relation;
@@ -15,6 +21,7 @@ import com.osm2xp.translators.ITranslator;
 import com.osm2xp.utils.FilesUtils;
 import com.osm2xp.utils.GeomUtils;
 import com.osm2xp.utils.OsmUtils;
+import com.osm2xp.utils.helpers.FlightGearOptionsHelper;
 import com.osm2xp.utils.helpers.GuiOptionsHelper;
 import com.osm2xp.utils.logging.Osm2xpLogger;
 
@@ -38,7 +45,7 @@ public class FlightGearTranslatorImpl implements ITranslator {
 	 */
 	private File xmlFile;
 
-	private static final String FLIGHT_GEAR_OBJECT_DECLARATION = "OBJECT_SHARED Models/{0} {1} {2} {3} {4}\n";
+	private static final String FLIGHT_GEAR_OBJECT_DECLARATION = "OBJECT_SHARED_AGL {0} {1} {2} {3} {4} {5} {6}\n";
 
 	/**
 	 * Constuctor.
@@ -67,31 +74,54 @@ public class FlightGearTranslatorImpl implements ITranslator {
 	@Override
 	public void processPolygon(OsmPolygon osmPolygon)
 			throws Osm2xpBusinessException {
-		LinearRing2D polygon = new LinearRing2D();
+		if (osmPolygon != null && osmPolygon.getNodes() != null) {
+			// check if the current polygon has some tags this translator wants
+			// to use
+			List<TagsRules> matchingTags = OsmUtils.getMatchingRules(
+					FlightGearOptionsHelper.getOptions().getObjectsRules()
+							.getRules(), osmPolygon);
+			if (matchingTags != null && !matchingTags.isEmpty()) {
 
-		// if the processor sent back a complete list of nodes
-		// construct a polygon from those nodes
-
-		polygon = GeomUtils.getPolygonFromOsmNodes(osmPolygon.getNodes());
-		// simplify shape if checked and if necessary
-		if (GuiOptionsHelper.getOptions().isSimplifyShapes()
-				&& !osmPolygon.isSimplePolygon()) {
-			polygon = GeomUtils.simplifyPolygon(polygon);
+				LinearRing2D polygon = new LinearRing2D();
+				// if the processor sent back a complete list of nodes
+				// construct a polygon from those nodes
+				polygon = GeomUtils.getPolygonFromOsmNodes(osmPolygon
+						.getNodes());
+				// inject it into the scenery file.
+				injectPolygonIntoScenery(polygon, matchingTags);
+			}
 		}
+	}
 
-		// if the polygon is a building, write it in the xml file.
-		if (OsmUtils.isBuilding(osmPolygon.getTags())) {
-			Point2D centerPoint = GeomUtils.getPolygonCenter(osmPolygon
-					.getPolygon());
+	private void injectPolygonIntoScenery(LinearRing2D polygon,
+			List<TagsRules> matchingTagsRules) {
+
+		// simplify shape until we have a simple rectangle
+
+		LinearRing2D simplifiedPolygon = GeomUtils.simplifyPolygon(polygon);
+
+		// shuffle matching tags rules
+		Collections.shuffle(matchingTagsRules);
+		TagsRules logicRule = matchingTagsRules.get(0);
+		// shuffle objects
+		Collections.shuffle(logicRule.getObjectsFiles());
+		// select object that will be injected.
+		ObjectFile object = logicRule.getObjectsFiles().get(0);
+
+		if (object != null && StringUtils.isNotBlank(object.getPath())) {
+
+			// compute center point of the polygon.
+			Point2D centerPoint = GeomUtils.getPolygonCenter(simplifiedPolygon);
+			// params : <object-path> <longitude> <latitude>
+			// <elevation-offset-m> <heading-deg> <pitch-deg> <roll-deg>
 			String objectDeclaration = MessageFormat.format(
-					FLIGHT_GEAR_OBJECT_DECLARATION, new Object[] {
-							"Communications/radio-medium.xml", centerPoint.x,
-							centerPoint.y, 1, 0 });
-			objectDeclaration=objectDeclaration.replaceAll(",", ".");
+					FLIGHT_GEAR_OBJECT_DECLARATION,
+					new Object[] { object.getPath(), centerPoint.x,
+							centerPoint.y, 0, 1, 0, 0 });
+			objectDeclaration = objectDeclaration.replaceAll(",", ".");
 			FilesUtils.writeTextToFile(this.xmlFile, objectDeclaration, true);
 
 		}
-
 	}
 
 	@Override
@@ -101,13 +131,12 @@ public class FlightGearTranslatorImpl implements ITranslator {
 
 	@Override
 	public void complete() {
-		FilesUtils.writeTextToFile(this.xmlFile, "END", true);
-		Osm2xpLogger.info("Fly! Legacy buildings file finished.");
+		Osm2xpLogger.info("FlightGear file finished.");
 	}
 
 	@Override
 	public void init() {
-		Osm2xpLogger.info("Starting Fly! Legacy file for tile "
+		Osm2xpLogger.info("Starting FlightGear file for tile "
 				+ this.currentTile.x + "/" + this.currentTile.y + ".");
 	}
 

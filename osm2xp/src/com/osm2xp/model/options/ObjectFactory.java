@@ -46,6 +46,14 @@ public class ObjectFactory {
 	}
 
 	/**
+	 * Create an instance of {@linkFlightGearOptions }
+	 * 
+	 */
+	public FlightGearOptions createFlightGearOptions() {
+		return new FlightGearOptions();
+	}
+	
+	/**
 	 * Create an instance of {@link BuildingsExclusionsList }
 	 * 
 	 */
