@@ -31,9 +31,9 @@ public class GeneratedItemsPanel extends Osm2xpPanel {
 	@Override
 	protected void initComponents() {
 		btnGenerateBuildings = new Button(this, SWT.CHECK);
-		btnGenerateBuildings.setText("Generate buildings");
+		btnGenerateBuildings.setText("Generate facades buildings");
 		btnGenerateObjects = new Button(this, SWT.CHECK);
-		btnGenerateObjects.setText("Generate objects");
+		btnGenerateObjects.setText("Generate 3D objects");
 		btnGenerateForests = new Button(this, SWT.CHECK);
 		btnGenerateForests.setText("Generate Forests");
 		btnGenerateStreetLights = new Button(this, SWT.CHECK);
