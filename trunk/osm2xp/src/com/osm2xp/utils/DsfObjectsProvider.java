@@ -51,8 +51,12 @@ public class DsfObjectsProvider {
 		compute3dObjectsList();
 	}
 
+	/**
+	 * @param facadeSet
+	 */
 	public DsfObjectsProvider() {
-
+		computePolygonsList();
+		compute3dObjectsList();
 	}
 
 	/**
@@ -366,17 +370,23 @@ public class DsfObjectsProvider {
 	 * @throws Osm2xpBusinessException
 	 */
 	public void computePolygonsList() {
-		if (this.facadeSet != null) {
-			facadesList.clear();
-			forestsList.clear();
-			polygonsList.clear();
-			singlesFacadesList.clear();
 
+		facadesList.clear();
+		forestsList.clear();
+		polygonsList.clear();
+		singlesFacadesList.clear();
+
+		// BASIC BUILDINGS FACADES
+		if (XplaneOptionsHelper.getOptions().isGenerateBuildings()) {
 			for (Facade facade : facadeSet.getFacades()) {
 				facadesList.add(facade.getFile());
 			}
+			polygonsList.addAll(facadesList);
+		}
 
-			// add singles facades
+		// FACADES RULES
+		if (!XplaneOptionsHelper.getOptions().getFacadesRules().getRules()
+				.isEmpty()) {
 			for (FacadeTagRule facadeTagRule : XplaneOptionsHelper.getOptions()
 					.getFacadesRules().getRules()) {
 				for (ObjectFile file : facadeTagRule.getObjectsFiles()) {
@@ -385,8 +395,12 @@ public class DsfObjectsProvider {
 					}
 				}
 			}
+			polygonsList.addAll(singlesFacadesList);
+		}
 
-			// add forest objects
+		// FORESTS RULES
+		if (XplaneOptionsHelper.getOptions().isGenerateFor()) {
+
 			for (ForestTagRule forest : XplaneOptionsHelper.getOptions()
 					.getForestsRules().getRules()) {
 				for (ObjectFile file : forest.getObjectsFiles()) {
@@ -396,12 +410,10 @@ public class DsfObjectsProvider {
 
 				}
 			}
-
-			polygonsList.addAll(singlesFacadesList);
 			polygonsList.addAll(forestsList);
-			polygonsList.addAll(facadesList);
 
 		}
+
 	}
 
 	/**
