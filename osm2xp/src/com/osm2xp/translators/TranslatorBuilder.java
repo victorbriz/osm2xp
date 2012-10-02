@@ -189,10 +189,13 @@ public class TranslatorBuilder {
 			Point2D currentTile, String folderPath) {
 
 		GenerationStats stats = StatsHelper.initStats(currentFile, currentTile);
-		String FacadeSetPath = Osm2xpConstants.FACADES_SETS_PATH
-				+ File.separator
-				+ XplaneOptionsHelper.getOptions().getFacadeSet();
-		FacadeSet facadeSet = FacadeSetHelper.getFacadeSet(FacadeSetPath);
+		FacadeSet facadeSet = null;
+		if (XplaneOptionsHelper.getOptions().isGenerateBuildings()) {
+			String FacadeSetPath = Osm2xpConstants.FACADES_SETS_PATH
+					+ File.separator
+					+ XplaneOptionsHelper.getOptions().getFacadeSet();
+			facadeSet = FacadeSetHelper.getFacadeSet(FacadeSetPath);
+		}
 		DsfObjectsProvider dsfObjectsProvider = new DsfObjectsProvider(
 				facadeSet);
 		IWriter writer = new DsfWriterImpl(folderPath, dsfObjectsProvider);
