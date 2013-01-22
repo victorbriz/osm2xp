@@ -87,6 +87,29 @@ public class FlyLegacyTranslatorImpl implements ITranslator {
 
 	@Override
 	public void processNode(Node node) throws Osm2xpBusinessException {
+		LinearRing2D polygon = new LinearRing2D();
+		//dummy polygon as tags placeholder
+		OsmPolygon osmPolygon =new OsmPolygon(node.getId(), node.getTag(), null);
+		// get list of watched tags that are also in the osm polygon
+		List<Tag> matchingTags = OsmUtils.getMatchingTags(
+				FlyLegacyOptionsHelper.getOptions().getWatchedTagsList()
+						.getTags(), osmPolygon);
+		if (matchingTags != null) {
+			StringBuilder stringBuilder = new StringBuilder();
+			// remove last node for fly specification
+			polygon.removePoint(polygon.getLastPoint());
+			stringBuilder.append("Start " + ++cptObjects + " id="
+					+ osmPolygon.getId() + "\n");
+			// write all the tags for this polygon
+			for (Tag matchingTag : matchingTags) {
+				stringBuilder.append("tag(" + matchingTag.getKey() + "="
+						+ matchingTag.getValue() + ")\n");
+			}
+				stringBuilder
+						.append("P(" + node.getLat() + "," + node.getLon() + ")\n");
+			FilesUtils.writeTextToFile(this.ofeFile, stringBuilder.toString(),
+					true);
+		}
 	}
 
 	@Override
