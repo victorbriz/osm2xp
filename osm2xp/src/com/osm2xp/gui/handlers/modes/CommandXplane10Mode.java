@@ -1,20 +1,17 @@
 package com.osm2xp.gui.handlers.modes;
 
-import java.io.IOException;
+import java.io.File;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
-import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.resources.ResourcesPlugin;
 
-import com.osm2xp.constants.Osm2xpConstants;
 import com.osm2xp.constants.Perspectives;
-import com.osm2xp.gui.Activator;
 import com.osm2xp.gui.views.panels.generic.OutPutFormatPanel;
 import com.osm2xp.utils.MiscUtils;
 import com.osm2xp.utils.helpers.GuiOptionsHelper;
-import com.osm2xp.utils.logging.Osm2xpLogger;
 
 /**
  * CommandXplane10Mode.
@@ -24,7 +21,17 @@ import com.osm2xp.utils.logging.Osm2xpLogger;
  */
 public class CommandXplane10Mode implements IHandler {
 
-	private static final String HTML_FILE = "html/modes/xplane10/index.html";
+	private static final String HTML_FILE = ResourcesPlugin.getWorkspace()
+			.getRoot().getLocation()
+			+ File.separator
+			+ "resources"
+			+ File.separator
+			+ "html"
+			+ File.separator
+			+ "modes"
+			+ File.separator
+			+ "xplane10"
+			+ File.separator + "index.html";
 
 	@Override
 	public void addHandlerListener(IHandlerListener handlerListener) {
@@ -40,16 +47,8 @@ public class CommandXplane10Mode implements IHandler {
 		GuiOptionsHelper.getOptions().setOutputFormat(
 				Perspectives.PERSPECTIVE_XPLANE10);
 		MiscUtils.switchPerspective(Perspectives.PERSPECTIVE_XPLANE10);
-		String url;
-		try {
-			url = FileLocator.toFileURL(
-					Activator.getDefault().getBundle().getEntry(HTML_FILE))
-					.getPath();
-			OutPutFormatPanel.updateBrowserUrl(url);
-		} catch (IOException e) {
-			Osm2xpLogger.error(e.getMessage());
-		}
 
+		OutPutFormatPanel.updateBrowserUrl(HTML_FILE);
 		return null;
 	}
 

@@ -1,20 +1,17 @@
 package com.osm2xp.gui.handlers.modes;
 
-import java.io.IOException;
+import java.io.File;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
-import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.resources.ResourcesPlugin;
 
-import com.osm2xp.constants.Osm2xpConstants;
 import com.osm2xp.constants.Perspectives;
-import com.osm2xp.gui.Activator;
 import com.osm2xp.gui.views.panels.generic.OutPutFormatPanel;
 import com.osm2xp.utils.MiscUtils;
 import com.osm2xp.utils.helpers.GuiOptionsHelper;
-import com.osm2xp.utils.logging.Osm2xpLogger;
 
 /**
  * CommandFlyLegacyMode.
@@ -24,7 +21,17 @@ import com.osm2xp.utils.logging.Osm2xpLogger;
  */
 public class CommandFlyLegacyMode implements IHandler {
 
-	private static final String HTML_FILE = "html/modes/flyLegacy/index.html";
+	private static final String HTML_FILE = ResourcesPlugin.getWorkspace()
+			.getRoot().getLocation()
+			+ File.separator
+			+ "resources"
+			+ File.separator
+			+ "html"
+			+ File.separator
+			+ "modes"
+			+ File.separator
+			+ "flyLegacy"
+			+ File.separator + "index.html";
 
 	@Override
 	public void addHandlerListener(IHandlerListener handlerListener) {
@@ -39,17 +46,8 @@ public class CommandFlyLegacyMode implements IHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		GuiOptionsHelper.getOptions().setOutputFormat(
 				Perspectives.PERSPECTIVE_FLY_LEGACY);
-		MiscUtils.switchPerspective(Perspectives.PERSPECTIVE_FLY_LEGACY);
-		String url;
-		try {
-			url = FileLocator.toFileURL(
-					Activator.getDefault().getBundle().getEntry(HTML_FILE))
-					.getPath();
-			OutPutFormatPanel.updateBrowserUrl(url);
-		} catch (IOException e) {
-			Osm2xpLogger.error(e.getMessage());
-		}
-
+		MiscUtils.switchPerspective(Perspectives.PERSPECTIVE_FLY_LEGACY);	
+		OutPutFormatPanel.updateBrowserUrl(HTML_FILE);
 		return null;
 	}
 

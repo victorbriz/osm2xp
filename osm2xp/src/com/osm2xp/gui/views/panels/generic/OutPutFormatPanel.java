@@ -42,9 +42,7 @@ public class OutPutFormatPanel extends Osm2xpPanel {
 	 * update description of the translator
 	 */
 	public static void updateBrowserUrl(String url) {
-		browser.setUrl("file:///" + url);
-		// browser.refresh();
-
+		browser.setUrl(url);
 	}
 
 	@Override
