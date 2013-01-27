@@ -5,20 +5,26 @@
 
    <aboutInfo>
       <text>
-         Osm2xp 2.0.2, OpenStreetMap scenery generator for flight simulation.
+         Osm2xp 2.1B1, OpenStreetMap scenery generator for flight Simulators.
 
-Copyright Benjamin Blanchet 2010-2012
+Copyright (C) 2010-2013  Benjamin Blanchet for Javee software solutions.
 
 Contact : osm2xp@gmail.com
 Website : http://osm2xp.com
 
-this work is under Attribution-NonCommercial-NoDerivs 3.0 Unported licence (http://creativecommons.org/licenses/by-nc-nd/3.0/)
 
-You are free to Share ,to copy, distribute and transmit the work
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-You must attribute the work in the manner specified by the author or licensor (but not in any way that suggests that they endorse you or your use of the work).
-You may not use this work for commercial purposes.
-You may not alter, transform, or build upon this work.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
 
 
 FreeMem plugin by Markus junginger http://www.junginger.biz/eclipse/freemem.html
@@ -46,44 +52,35 @@ Icons by Open Icon Library http://http://openiconlibrary.sourceforge.net/
       </win>
    </launcher>
 
+
    <vm>
    </vm>
 
    <license>
         <url>http://osm2xp.com</url>
         <text>
-   You are free:
+   OSM2XP 2.1B1   Copyright (C) 2010-2013  Benjamin Blanchet for Javee software solutions.
 
-to Share — to copy, distribute and transmit the work
-Under the following conditions:
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-Attribution — You must attribute the work in the manner specified by the author or licensor (but not in any way that suggests that they endorse you or your use of the work).
-Noncommercial — You may not use this work for commercial purposes.
-No Derivative Works — You may not alter, transform, or build upon this work.
-With the understanding that:
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-Waiver — Any of the above conditions can be waived if you get permission from the copyright holder.
-Public Domain — Where the work or any of its elements is in the public domain under applicable law, that status is in no way affected by the license.
-Other Rights — In no way are any of the following rights affected by the license:
-Your fair dealing or fair use rights, or other applicable copyright exceptions and limitations;
-The author&apos;s moral rights;
-Rights other persons may have either in the work itself or in how the work is used, such as publicity or privacy rights.
-
-
-http://creativecommons.org/licenses/by-nc/3.0/
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
          </text>
    </license>
 
    <plugins>
       <plugin id="biz.junginger.freemem.FreeMem"/>
-      <plugin id="ch.qos.logback.classic"/>
-      <plugin id="ch.qos.logback.core"/>
-      <plugin id="ch.qos.logback.slf4j" fragment="true"/>
       <plugin id="com.ibm.icu"/>
-      <plugin id="com.ning.async-http-client"/>
       <plugin id="com.osm2xp"/>
       <plugin id="javax.activation"/>
-      <plugin id="javax.mail"/>
       <plugin id="javax.servlet"/>
       <plugin id="javax.servlet.jsp"/>
       <plugin id="javax.xml"/>
@@ -115,7 +112,7 @@ http://creativecommons.org/licenses/by-nc/3.0/
       <plugin id="org.eclipse.core.expressions"/>
       <plugin id="org.eclipse.core.filebuffers"/>
       <plugin id="org.eclipse.core.filesystem"/>
-      <plugin id="org.eclipse.core.filesystem.win32.x86_64" fragment="true"/>
+      <plugin id="org.eclipse.core.filesystem.macosx" fragment="true"/>
       <plugin id="org.eclipse.core.jobs"/>
       <plugin id="org.eclipse.core.resources"/>
       <plugin id="org.eclipse.core.runtime"/>
@@ -144,7 +141,7 @@ http://creativecommons.org/licenses/by-nc/3.0/
       <plugin id="org.eclipse.equinox.preferences"/>
       <plugin id="org.eclipse.equinox.registry"/>
       <plugin id="org.eclipse.equinox.security"/>
-      <plugin id="org.eclipse.equinox.security.win32.x86_64" fragment="true"/>
+      <plugin id="org.eclipse.equinox.security.macosx" fragment="true"/>
       <plugin id="org.eclipse.help"/>
       <plugin id="org.eclipse.help.appserver"/>
       <plugin id="org.eclipse.help.base"/>
@@ -156,31 +153,23 @@ http://creativecommons.org/licenses/by-nc/3.0/
       <plugin id="org.eclipse.jface.text"/>
       <plugin id="org.eclipse.ltk.core.refactoring"/>
       <plugin id="org.eclipse.ltk.ui.refactoring"/>
-      <plugin id="org.eclipse.m2e.archetype.common"/>
-      <plugin id="org.eclipse.m2e.core"/>
-      <plugin id="org.eclipse.m2e.core.ui"/>
-      <plugin id="org.eclipse.m2e.logback.appender" fragment="true"/>
-      <plugin id="org.eclipse.m2e.maven.indexer"/>
-      <plugin id="org.eclipse.m2e.maven.runtime"/>
-      <plugin id="org.eclipse.m2e.model.edit"/>
-      <plugin id="org.eclipse.net4j.jms.api"/>
       <plugin id="org.eclipse.osgi"/>
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.osgi.util"/>
       <plugin id="org.eclipse.search"/>
       <plugin id="org.eclipse.swt"/>
-      <plugin id="org.eclipse.swt.win32.win32.x86_64" fragment="true"/>
+      <plugin id="org.eclipse.swt.cocoa.macosx.x86_64" fragment="true"/>
       <plugin id="org.eclipse.team.core"/>
       <plugin id="org.eclipse.team.ui"/>
       <plugin id="org.eclipse.text"/>
       <plugin id="org.eclipse.ui"/>
+      <plugin id="org.eclipse.ui.cocoa" fragment="true"/>
       <plugin id="org.eclipse.ui.console"/>
       <plugin id="org.eclipse.ui.editors"/>
       <plugin id="org.eclipse.ui.forms"/>
       <plugin id="org.eclipse.ui.ide"/>
       <plugin id="org.eclipse.ui.navigator"/>
       <plugin id="org.eclipse.ui.views"/>
-      <plugin id="org.eclipse.ui.win32" fragment="true"/>
       <plugin id="org.eclipse.ui.workbench"/>
       <plugin id="org.eclipse.ui.workbench.texteditor"/>
       <plugin id="org.eclipse.update.configurator"/>
@@ -196,10 +185,8 @@ http://creativecommons.org/licenses/by-nc/3.0/
       <plugin id="org.eclipse.wst.xml.core"/>
       <plugin id="org.eclipse.wst.xsd.core"/>
       <plugin id="org.eclipse.xsd"/>
-      <plugin id="org.jboss.netty"/>
       <plugin id="org.mortbay.jetty.server"/>
       <plugin id="org.mortbay.jetty.util"/>
-      <plugin id="org.slf4j.api"/>
    </plugins>
 
    <configurations>
