@@ -269,7 +269,6 @@ public class Xplane10TranslatorImpl implements ITranslator {
 		return result;
 	}
 
-	static int merde;
 
 	/**
 	 * compute the dsf index of the residential facade object used for a given
@@ -286,7 +285,6 @@ public class Xplane10TranslatorImpl implements ITranslator {
 				&& osmPolygon.isSimplePolygon()) {
 			result = dsfObjectsProvider.computeFacadeDsfIndex(true, true, true,
 					osmPolygon);
-			// System.out.println(merde++);
 		}
 		// no sloped roof, so we'll use a standard house facade
 		else {
