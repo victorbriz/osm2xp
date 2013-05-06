@@ -14,14 +14,15 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "excludeObj", "excludeFac", "excludeFor",
-		"excludeBch", "excludeNet", "excludeLin", "excludePol", "excludeStr",
-		"residentialMin", "residentialMax", "buildingMin", "buildingMax",
-		"minHouseSegment", "maxHouseSegment", "minHouseArea", "generateObj",
-		"generateFor", "generateStreetLights", "generateBuildings",
-		"generateSlopedRoofs", "lightsDensity", "packageFacades",
-		"hardBuildings", "lightObject", "facadeLod", "facadeSet",
-		"generateXmlStats", "generatePdfStats", "buildingsExclusions",
-		"forestsRules", "objectsRules", "facadesRules", "streetLightObjects" })
+		"smartExclusions", "excludeBch", "excludeNet", "excludeLin",
+		"excludePol", "excludeStr", "residentialMin", "residentialMax",
+		"buildingMin", "buildingMax", "minHouseSegment", "maxHouseSegment",
+		"minHouseArea", "generateObj", "generateFor", "generateStreetLights",
+		"generateBuildings", "generateSlopedRoofs", "lightsDensity",
+		"packageFacades", "hardBuildings", "lightObject", "facadeLod",
+		"facadeSet", "generateXmlStats", "generatePdfStats",
+		"buildingsExclusions", "forestsRules", "objectsRules", "facadesRules",
+		"streetLightObjects" })
 @XmlRootElement(name = "XplaneOptions")
 public class XplaneOptions {
 
@@ -33,6 +34,7 @@ public class XplaneOptions {
 	protected boolean excludeLin;
 	protected boolean excludePol;
 	protected boolean excludeStr;
+	protected boolean smartExclusions;
 	protected int residentialMin;
 	protected int residentialMax;
 	protected int buildingMin;
@@ -693,6 +695,14 @@ public class XplaneOptions {
 	 */
 	public void setStreetLightObjects(ObjectsList value) {
 		this.streetLightObjects = value;
+	}
+
+	public boolean isSmartExclusions() {
+		return smartExclusions;
+	}
+
+	public void setSmartExclusions(boolean smartExclusions) {
+		this.smartExclusions = smartExclusions;
 	}
 
 }

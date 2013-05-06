@@ -8,8 +8,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
-import com.osm2xp.constants.Osm2xpConstants;
 import com.osm2xp.constants.Perspectives;
 import com.osm2xp.utils.helpers.GuiOptionsHelper;
 import com.osm2xp.utils.helpers.XplaneOptionsHelper;
@@ -96,6 +96,15 @@ public class SceneryExclusionsPanel extends Composite {
 					SWTObservables.observeSelection(btnCheckExcludePol),
 					PojoObservables.observeValue(
 							XplaneOptionsHelper.getOptions(), "excludePol"));
+
+			Button btnCheckSmartExclusions = new Button(this, SWT.CHECK);
+			btnCheckSmartExclusions.setLayoutData(new GridData(SWT.FILL,
+					SWT.CENTER, false, false, 1, 1));
+			btnCheckSmartExclusions.setText("Smart exclusions");
+			bindingContext.bindValue(SWTObservables
+					.observeSelection(btnCheckSmartExclusions), PojoObservables
+					.observeValue(XplaneOptionsHelper.getOptions(),
+							"smartExclusions"));
 		}
 
 	}
