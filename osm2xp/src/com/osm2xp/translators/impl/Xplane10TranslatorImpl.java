@@ -22,6 +22,7 @@ import com.osm2xp.utils.MiscUtils;
 import com.osm2xp.utils.OsmUtils;
 import com.osm2xp.utils.helpers.GuiOptionsHelper;
 import com.osm2xp.utils.helpers.StatsHelper;
+import com.osm2xp.utils.helpers.XplaneExclusionsHelper;
 import com.osm2xp.utils.helpers.XplaneOptionsHelper;
 import com.osm2xp.utils.logging.Osm2xpLogger;
 import com.osm2xp.writers.IWriter;
@@ -70,6 +71,11 @@ public class Xplane10TranslatorImpl implements ITranslator {
 	 * dsf object provider.
 	 */
 	private DsfObjectsProvider dsfObjectsProvider;
+	/**
+	 * Smart exclusions helper.
+	 */
+	private XplaneExclusionsHelper exclusionsHelper=new XplaneExclusionsHelper();
+
 
 	/**
 	 * Constructor.
@@ -493,6 +499,10 @@ public class Xplane10TranslatorImpl implements ITranslator {
 				Integer facade = computeFacadeIndex(osmPolygon);
 				// write building in dsf file
 				writeBuildingToDsf(osmPolygon, facade);
+				//Smart exclusions
+				if (XplaneOptionsHelper.getOptions().isSmartExclusions()){
+					exclusionsHelper.addBuildingToExclusions(osmPolygon);
+				}
 				result = true;
 			}
 		}
