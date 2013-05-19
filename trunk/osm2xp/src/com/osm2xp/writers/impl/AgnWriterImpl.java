@@ -80,7 +80,7 @@ public class AgnWriterImpl implements IWriter {
 	}
 
 	@Override
-	public void complete() {
+	public void complete(Object data) {
 
 		String agn2txt = "C:/Documents and Settings/bblanche/Bureau/latest_development_releases_package"
 				+ File.separatorChar + "txt2agn.exe";

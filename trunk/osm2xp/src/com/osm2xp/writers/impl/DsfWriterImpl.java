@@ -1,12 +1,18 @@
 package com.osm2xp.writers.impl;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
+
 import math.geom2d.Point2D;
 
+import com.osm2xp.constants.XplaneConstants;
 import com.osm2xp.utils.DsfObjectsProvider;
 import com.osm2xp.utils.DsfUtils;
 import com.osm2xp.utils.FilesUtils;
@@ -22,7 +28,6 @@ import com.osm2xp.writers.IWriter;
 public class DsfWriterImpl implements IWriter {
 
 	private String sceneFolder;
-	private FileWriter writer = null;
 	private DsfObjectsProvider dsfObjectsProvider;
 	private Map<Point2D, File> dsfFiles = new HashMap<Point2D, File>();
 
@@ -48,8 +53,15 @@ public class DsfWriterImpl implements IWriter {
 	}
 
 	@Override
-	public void complete() {
-
+	public void complete(Object data) {
+		if (data != null) {
+			try {
+				injectSmartExclusions((String) data);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		for (Map.Entry<Point2D, File> entry : dsfFiles.entrySet()) {
 			DsfUtils.textToDsf(entry.getValue(), new File(entry.getValue()
 					.getPath().replaceAll(".txt", "")));
@@ -108,4 +120,30 @@ public class DsfWriterImpl implements IWriter {
 
 	}
 
+	private void injectSmartExclusions(String exclusionText) throws IOException {
+
+		for (Map.Entry<Point2D, File> entry : dsfFiles.entrySet()) {
+
+			// temp file
+			File tempFile = new File(entry.getValue().getAbsolutePath()
+					+ "_temp");
+			BufferedReader br = new BufferedReader(new FileReader(
+					entry.getValue()));
+			String line;
+			while ((line = br.readLine()) != null) {
+				line = line + "\n";
+				if (line.contains(XplaneConstants.EXCLUSION_PLACEHOLDER)) {
+					FilesUtils.writeTextToFile(tempFile, exclusionText, true);
+				} else {
+					FilesUtils.writeTextToFile(tempFile, line, true);
+				}
+			}
+			br.close();
+
+			FileUtils.copyFile(tempFile, entry.getValue());
+			tempFile.delete();
+			tempFile.deleteOnExit();
+
+		}
+	}
 }

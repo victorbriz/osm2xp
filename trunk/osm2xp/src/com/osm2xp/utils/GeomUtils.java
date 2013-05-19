@@ -5,10 +5,14 @@ import java.util.Collection;
 import java.util.List;
 
 import math.geom2d.Angle2D;
+import math.geom2d.Box2D;
 import math.geom2d.Point2D;
+import math.geom2d.Shape2D;
 import math.geom2d.line.Line2D;
 import math.geom2d.line.LineSegment2D;
+import math.geom2d.line.LinearShape2D;
 import math.geom2d.polygon.LinearRing2D;
+import math.geom2d.polygon.Rectangle2D;
 
 import org.opencarto.algo.ShortEdgesDeletion;
 
@@ -772,5 +776,28 @@ public class GeomUtils {
 		location.setyOffset(yOffset);
 
 		return location;
+	}
+
+	public static boolean boxContainsAnotherBox(Box2D box1, Box2D box2) {
+		// poly inside another?
+		Rectangle2D rect1 = new Rectangle2D(box1.getAsAWTRectangle2D());
+		Rectangle2D rect2 = new Rectangle2D(box2.getAsAWTRectangle2D());
+		if (box1.containsBounds(rect2)) {
+			return true;
+		}
+		if (box2.containsBounds(rect1)) {
+			return true;
+		}
+
+		// check intersections
+		for (LinearShape2D line : box1.getEdges()) {
+			for (LinearShape2D line2 : box2.getEdges()) {
+				if (line.getIntersection(line2) != null) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 }

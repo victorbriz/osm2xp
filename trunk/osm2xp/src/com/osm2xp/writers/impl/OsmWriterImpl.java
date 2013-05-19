@@ -68,7 +68,7 @@ public class OsmWriterImpl implements IWriter {
 	}
 
 	@Override
-	public void complete() {
+	public void complete(Object data) {
 		writerFooter();
 	}
 
