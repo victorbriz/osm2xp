@@ -1,5 +1,6 @@
 package com.osm2xp.translators.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -74,8 +75,7 @@ public class Xplane10TranslatorImpl implements ITranslator {
 	/**
 	 * Smart exclusions helper.
 	 */
-	private XplaneExclusionsHelper exclusionsHelper=new XplaneExclusionsHelper();
-
+	private XplaneExclusionsHelper exclusionsHelper = new XplaneExclusionsHelper();
 
 	/**
 	 * Constructor.
@@ -110,7 +110,6 @@ public class Xplane10TranslatorImpl implements ITranslator {
 					+ stats.getStreetlightsNumber() + " street lights, "
 					+ stats.getObjectsNumber() + " objects. (generation took "
 					+ MiscUtils.getTimeDiff(startTime, new Date()) + ")");
-			writer.complete();
 
 			// stats
 			try {
@@ -134,6 +133,15 @@ public class Xplane10TranslatorImpl implements ITranslator {
 			Osm2xpLogger.info("Tile " + (int) currentTile.x + "/"
 					+ (int) currentTile.y + " is empty, no dsf generated");
 		}
+		// if smart exclusions enabled, send them to writer
+		if (XplaneOptionsHelper.getOptions().isSmartExclusions()) {
+			String exclusions = exclusionsHelper.exportExclusions();
+			writer.complete(exclusions);
+
+		} else {
+			writer.complete(null);
+		}
+
 	}
 
 	@Override
@@ -144,6 +152,10 @@ public class Xplane10TranslatorImpl implements ITranslator {
 		dsfObjectsProvider.compute3dObjectsList();
 		// writer initialization
 		writer.init(currentTile);
+		// exclusionHelper
+		if (XplaneOptionsHelper.getOptions().isSmartExclusions()) {
+			exclusionsHelper.run();
+		}
 
 	}
 
@@ -274,7 +286,6 @@ public class Xplane10TranslatorImpl implements ITranslator {
 		}
 		return result;
 	}
-
 
 	/**
 	 * compute the dsf index of the residential facade object used for a given
@@ -499,9 +510,10 @@ public class Xplane10TranslatorImpl implements ITranslator {
 				Integer facade = computeFacadeIndex(osmPolygon);
 				// write building in dsf file
 				writeBuildingToDsf(osmPolygon, facade);
-				//Smart exclusions
-				if (XplaneOptionsHelper.getOptions().isSmartExclusions()){
-					exclusionsHelper.addBuildingToExclusions(osmPolygon);
+				// Smart exclusions
+				if (XplaneOptionsHelper.getOptions().isSmartExclusions()) {
+					exclusionsHelper.addTodoPolygon(osmPolygon);
+					exclusionsHelper.run();
 				}
 				result = true;
 			}

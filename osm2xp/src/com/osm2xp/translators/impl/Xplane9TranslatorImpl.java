@@ -104,7 +104,7 @@ public class Xplane9TranslatorImpl implements ITranslator {
 					+ stats.getStreetlightsNumber() + " street lights, "
 					+ stats.getObjectsNumber() + " objects. (generation took "
 					+ MiscUtils.getTimeDiff(startTime, new Date()) + ")");
-			writer.complete();
+			writer.complete(null);
 
 			// stats
 			try {

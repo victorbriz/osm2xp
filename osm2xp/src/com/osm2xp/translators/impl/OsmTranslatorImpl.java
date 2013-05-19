@@ -131,7 +131,7 @@ public class OsmTranslatorImpl implements ITranslator {
 
 	@Override
 	public void complete() {
-		writer.complete();
+		writer.complete(null);
 		Osm2xpLogger.info("Osm file complete");
 
 	}

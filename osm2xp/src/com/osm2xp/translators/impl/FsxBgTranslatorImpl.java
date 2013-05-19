@@ -115,7 +115,7 @@ public class FsxBgTranslatorImpl implements ITranslator {
 
 	@Override
 	public void complete() {
-		writer.complete();
+		writer.complete(null);
 
 	}
 

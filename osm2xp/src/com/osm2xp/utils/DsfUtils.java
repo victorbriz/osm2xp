@@ -13,6 +13,7 @@ import math.geom2d.Point2D;
 
 import com.osm2xp.constants.Osm2xpConstants;
 import com.osm2xp.constants.Perspectives;
+import com.osm2xp.constants.XplaneConstants;
 import com.osm2xp.exceptions.Osm2xpBusinessException;
 import com.osm2xp.exceptions.Osm2xpTechnicalException;
 import com.osm2xp.model.xplane.XplaneDsfObject;
@@ -64,7 +65,7 @@ public class DsfUtils {
 		writer.write("<tag k=\"man_made\" v=\"water_tower\"/>\n");
 		writer.write("</node>\n");
 
-		writer.complete();
+		writer.complete(null);
 	}
 
 	/**
@@ -369,7 +370,11 @@ public class DsfUtils {
 		sb.append("PROPERTY sim/creation_agent Osm2Xp "
 				+ Osm2xpConstants.OSM2XP_VERSION + " by Benjamin Blanchet \n");
 		// Exclusions
-		sb.append(getDsfExclusions(tileCoordinate));
+		if (XplaneOptionsHelper.getOptions().isSmartExclusions()) {
+			sb.append(XplaneConstants.EXCLUSION_PLACEHOLDER + "\n");
+		} else {
+			sb.append(getDsfExclusions(tileCoordinate));
+		}
 
 		sb.append("PROPERTY sim/west " + longitude + "\n");
 		sb.append("PROPERTY sim/east " + (longitude + 1) + "\n");

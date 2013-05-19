@@ -60,7 +60,7 @@ public class BglWriterImpl implements IWriter {
 	}
 
 	@Override
-	public void complete() {
+	public void complete(Object data) {
 		FilesUtils.writeTextToFile(currentBglFile, "\n</FSData>", true);
 		compileBgl();
 
