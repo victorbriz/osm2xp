@@ -14,15 +14,15 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "excludeObj", "excludeFac", "excludeFor",
-		"smartExclusions", "excludeBch", "excludeNet", "excludeLin",
-		"excludePol", "excludeStr", "residentialMin", "residentialMax",
-		"buildingMin", "buildingMax", "minHouseSegment", "maxHouseSegment",
-		"minHouseArea", "generateObj", "generateFor", "generateStreetLights",
-		"generateBuildings", "generateSlopedRoofs", "lightsDensity",
-		"packageFacades", "hardBuildings", "lightObject", "facadeLod",
-		"facadeSet", "generateXmlStats", "generatePdfStats",
-		"buildingsExclusions", "forestsRules", "objectsRules", "facadesRules",
-		"streetLightObjects" })
+		"smartExclusions", "smartExclusionSize", "smartExclusionDistance",
+		"excludeBch", "excludeNet", "excludeLin", "excludePol", "excludeStr",
+		"residentialMin", "residentialMax", "buildingMin", "buildingMax",
+		"minHouseSegment", "maxHouseSegment", "minHouseArea", "generateObj",
+		"generateFor", "generateStreetLights", "generateBuildings",
+		"generateSlopedRoofs", "lightsDensity", "packageFacades",
+		"hardBuildings", "lightObject", "facadeLod", "facadeSet",
+		"generateXmlStats", "generatePdfStats", "buildingsExclusions",
+		"forestsRules", "objectsRules", "facadesRules", "streetLightObjects" })
 @XmlRootElement(name = "XplaneOptions")
 public class XplaneOptions {
 
@@ -42,6 +42,8 @@ public class XplaneOptions {
 	protected int minHouseSegment;
 	protected int maxHouseSegment;
 	protected int minHouseArea;
+	protected int smartExclusionSize;
+	protected int smartExclusionDistance;
 	protected boolean generateObj;
 	protected boolean generateFor;
 	protected boolean generateStreetLights;
@@ -98,7 +100,8 @@ public class XplaneOptions {
 			final ForestsRulesList forestsRules,
 			final XplaneObjectsRulesList objectsRules,
 			final FacadesRulesList facadesRules,
-			final ObjectsList streetLightObjects) {
+			final ObjectsList streetLightObjects,
+			final int smartExclusionDistance, final int smartExclusionSize) {
 		this.excludeObj = excludeObj;
 		this.excludeFac = excludeFac;
 		this.excludeFor = excludeFor;
@@ -132,6 +135,8 @@ public class XplaneOptions {
 		this.objectsRules = objectsRules;
 		this.facadesRules = facadesRules;
 		this.streetLightObjects = streetLightObjects;
+		this.smartExclusionDistance = smartExclusionDistance;
+		this.smartExclusionSize = smartExclusionSize;
 	}
 
 	/**
@@ -703,6 +708,22 @@ public class XplaneOptions {
 
 	public void setSmartExclusions(boolean smartExclusions) {
 		this.smartExclusions = smartExclusions;
+	}
+
+	public int getSmartExclusionSize() {
+		return smartExclusionSize;
+	}
+
+	public void setSmartExclusionSize(int smartExclusionSize) {
+		this.smartExclusionSize = smartExclusionSize;
+	}
+
+	public int getSmartExclusionDistance() {
+		return smartExclusionDistance;
+	}
+
+	public void setSmartExclusionDistance(int smartExclusionDistance) {
+		this.smartExclusionDistance = smartExclusionDistance;
 	}
 
 }

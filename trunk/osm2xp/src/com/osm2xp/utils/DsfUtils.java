@@ -299,8 +299,12 @@ public class DsfUtils {
 		StringBuilder sb = new StringBuilder();
 		// Exclusions
 		if (XplaneOptionsHelper.getOptions().isExcludeObj()) {
-
-			sb.append("PROPERTY sim/exclude_obj " + tileCoordinate);
+			// smart OBJ exclusion
+			if (XplaneOptionsHelper.getOptions().isSmartExclusions()) {
+				sb.append(XplaneConstants.EXCLUSION_PLACEHOLDER+"\n");
+			} else {
+				sb.append("PROPERTY sim/exclude_obj " + tileCoordinate);
+			}
 		}
 		if (XplaneOptionsHelper.getOptions().isExcludeFac()) {
 			sb.append("PROPERTY sim/exclude_fac " + tileCoordinate);
@@ -370,12 +374,7 @@ public class DsfUtils {
 		sb.append("PROPERTY sim/creation_agent Osm2Xp "
 				+ Osm2xpConstants.OSM2XP_VERSION + " by Benjamin Blanchet \n");
 		// Exclusions
-		if (XplaneOptionsHelper.getOptions().isSmartExclusions()) {
-			sb.append(XplaneConstants.EXCLUSION_PLACEHOLDER + "\n");
-		} else {
-			sb.append(getDsfExclusions(tileCoordinate));
-		}
-
+		sb.append(getDsfExclusions(tileCoordinate));
 		sb.append("PROPERTY sim/west " + longitude + "\n");
 		sb.append("PROPERTY sim/east " + (longitude + 1) + "\n");
 		sb.append("PROPERTY sim/north " + (latitude + 1) + "\n");

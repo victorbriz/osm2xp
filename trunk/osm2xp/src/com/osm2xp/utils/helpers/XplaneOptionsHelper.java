@@ -77,6 +77,8 @@ public class XplaneOptionsHelper extends OptionsHelper {
 		result.setMinHouseSegment(2);
 		result.setMinHouseArea(20);
 		result.setMaxHouseSegment(200);
+		result.setSmartExclusionDistance(25);
+		result.setSmartExclusionSize(100);
 		return result;
 	}
 
