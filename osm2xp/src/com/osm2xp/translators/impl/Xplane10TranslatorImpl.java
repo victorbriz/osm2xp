@@ -1,6 +1,5 @@
 package com.osm2xp.translators.impl;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -104,6 +103,16 @@ public class Xplane10TranslatorImpl implements ITranslator {
 
 	@Override
 	public void complete() {
+		
+		// if smart exclusions enabled, send them to writer
+		if (XplaneOptionsHelper.getOptions().isSmartExclusions()) {
+			String exclusions = exclusionsHelper.exportExclusions();
+			writer.complete(exclusions);
+
+		} else {
+			writer.complete(null);
+		}
+		
 		if (!StatsHelper.isTileEmpty(stats)) {
 			Osm2xpLogger.info("stats : " + stats.getBuildingsNumber()
 					+ " buildings, " + stats.getForestsNumber() + " forests, "
@@ -133,14 +142,7 @@ public class Xplane10TranslatorImpl implements ITranslator {
 			Osm2xpLogger.info("Tile " + (int) currentTile.x + "/"
 					+ (int) currentTile.y + " is empty, no dsf generated");
 		}
-		// if smart exclusions enabled, send them to writer
-		if (XplaneOptionsHelper.getOptions().isSmartExclusions()) {
-			String exclusions = exclusionsHelper.exportExclusions();
-			writer.complete(exclusions);
 
-		} else {
-			writer.complete(null);
-		}
 
 	}
 

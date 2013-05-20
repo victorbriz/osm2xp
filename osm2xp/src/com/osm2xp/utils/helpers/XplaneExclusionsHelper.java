@@ -9,13 +9,16 @@ import math.geom2d.polygon.LinearRing2D;
 
 import com.osm2xp.model.osm.OsmPolygon;
 import com.osm2xp.utils.GeomUtils;
+import com.osm2xp.utils.logging.Osm2xpLogger;
 
 public class XplaneExclusionsHelper extends Thread {
 
 	private List<Box2D> exclusions = new ArrayList<Box2D>();
 	private List<OsmPolygon> todoPolygons = new ArrayList<OsmPolygon>();
 
-	private static final double DISTANCE = 10;
+	public int getExclusionsSize() {
+		return exclusions.size();
+	}
 
 	private void addBuildingToExclusions(OsmPolygon osmPolygon) {
 
@@ -31,7 +34,8 @@ public class XplaneExclusionsHelper extends Thread {
 						.getPolygon());
 				double distanceBetweenPolygons = (centerA.distance(centerB)) * 1000;
 
-				if (distanceBetweenPolygons < DISTANCE) {
+				if (distanceBetweenPolygons < XplaneOptionsHelper.getOptions()
+						.getSmartExclusionDistance()) {
 					Box2D newFootprint = footprint.merge(osmPolygon
 							.getPolygon().getBoundingBox());
 
@@ -61,7 +65,7 @@ public class XplaneExclusionsHelper extends Thread {
 		List<Box2D> footprintsToRemove = new ArrayList<Box2D>();
 		for (Box2D footprint : exclusions) {
 			double area = (footprint.getHeight() * footprint.getWidth()) * 1000000;
-			if (area < 1) {
+			if (area < XplaneOptionsHelper.getOptions().getSmartExclusionSize()) {
 				footprintsToRemove.add(footprint);
 			}
 		}
@@ -94,8 +98,12 @@ public class XplaneExclusionsHelper extends Thread {
 	}
 
 	public String exportExclusions() {
+		Osm2xpLogger.info("Obj exclusions size:" + exclusions.size()
+				+ " ,starting optimisation.");
 		optimiseExclusion();
 		removeSmallExclusions();
+		Osm2xpLogger.info("Optimisation done, Obj exclusions size:"
+				+ exclusions.size() + ".");
 
 		StringBuilder sbBuilder = new StringBuilder();
 		for (Box2D exclusion : exclusions) {
