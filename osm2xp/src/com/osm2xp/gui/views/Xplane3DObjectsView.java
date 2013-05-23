@@ -16,8 +16,6 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.ResourceManager;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import com.osm2xp.gui.views.panels.xplane.StreetLightsDensityPanel;
-import com.osm2xp.gui.views.panels.xplane.StreetLightsPanel;
 import com.osm2xp.gui.views.panels.xplane.XplaneObjectsRulesPanel;
 
 /**
@@ -73,35 +71,6 @@ public class Xplane3DObjectsView extends ViewPart implements IContextProvider {
 		toolkit.adapt(objectsRulesPanel, true, true);
 		sectionObjectsRules.setClient(objectsRulesPanel);
 
-		/**
-		 * Street lights
-		 */
-
-		Section sectionStreetLightsObjects = toolkit.createSection(
-				form.getBody(), Section.TWISTIE | Section.TITLE_BAR);
-		sectionStreetLightsObjects.setLayoutData(new TableWrapData(
-				TableWrapData.FILL_GRAB, TableWrapData.TOP, 1, 1));
-
-		sectionStreetLightsObjects.setText("Street lights");
-		StreetLightsPanel StreetLightsPanel = new StreetLightsPanel(
-				sectionStreetLightsObjects, SWT.BORDER);
-		toolkit.adapt(StreetLightsPanel, true, true);
-		sectionStreetLightsObjects.setClient(StreetLightsPanel);
-
-		/**
-		 * Street lights dentity
-		 */
-
-		Section sectionStreetLightsDensity = toolkit.createSection(
-				form.getBody(), Section.TWISTIE | Section.TITLE_BAR);
-		sectionStreetLightsDensity.setLayoutData(new TableWrapData(
-				TableWrapData.FILL_GRAB, TableWrapData.TOP, 1, 1));
-
-		sectionStreetLightsDensity.setText("Street lights density");
-		StreetLightsDensityPanel StreetLightsDensityPanel = new StreetLightsDensityPanel(
-				sectionStreetLightsDensity, SWT.BORDER);
-		toolkit.adapt(StreetLightsDensityPanel, true, true);
-		sectionStreetLightsDensity.setClient(StreetLightsDensityPanel);
 	}
 
 	/**

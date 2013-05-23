@@ -19,7 +19,9 @@ import com.osm2xp.model.osm.Tag;
 public class LightTagRule extends TagsRules {
 
 	protected int height;
-	protected boolean offset;
+	protected int offset;
+
+
 
 	/**
 	 * Default no-arg constructor
@@ -34,7 +36,7 @@ public class LightTagRule extends TagsRules {
 	 * 
 	 */
 	public LightTagRule(final Tag tag, final List<ObjectFile> objectsFiles,
-			final int height, final boolean offset) {
+			final int height, final int offset) {
 		super(tag, objectsFiles);
 		this.height = height;
 		this.offset = offset;
@@ -48,12 +50,11 @@ public class LightTagRule extends TagsRules {
 	public void setHeight(int height) {
 		this.height = height;
 	}
-
-	public boolean isOffset() {
+	public int getOffset() {
 		return offset;
 	}
 
-	public void setOffset(boolean offset) {
+	public void setOffset(int offset) {
 		this.offset = offset;
 	}
 

@@ -93,7 +93,7 @@
       <view
             class="com.osm2xp.gui.views.Xplane3DObjectsView"
             id="com.osm2xp.viewObjectsTab"
-            name="xplane 3D Objects"
+            name="3D Objects"
             restorable="true">
       </view>
       <view
@@ -105,7 +105,7 @@
       <view
             class="com.osm2xp.gui.views.XplaneAdvancedOptionsView"
             id="com.osm2xp.Xplane9AdvancedOptionsView"
-            name="X-plane 9 options"
+            name="Advanced Options"
             restorable="true">
       </view>
       <view
@@ -123,7 +123,7 @@
       <view
             class="com.osm2xp.gui.views.XplaneAdvancedOptionsView"
             id="com.osm2xp.Xplane10AdvancedOptionsView"
-            name="X-plane 10 options"
+            name="Advanced Options"
             restorable="true">
       </view>
       <view
@@ -148,6 +148,12 @@
             class="com.osm2xp.gui.views.FlightGear3DObjectsView"
             id="com.osm2xp.viewFlightGearObjectsTab"
             name="FlightGear 3D Objects"
+            restorable="true">
+      </view>
+      <view
+            class="com.osm2xp.gui.views.XplaneLightsView"
+            id="com.osm2xp.viewLightsTab"
+            name="Lights"
             restorable="true">
       </view>
    </extension>
@@ -362,6 +368,12 @@
          </view>
          <view
                id="com.osm2xp.viewObjectsTab"
+               minimized="false"
+               relationship="stack"
+               relative="com.osm2xp.viewSceneryTab">
+         </view>
+         <view
+               id="com.osm2xp.viewLightsTab"
                minimized="false"
                relationship="stack"
                relative="com.osm2xp.viewSceneryTab">

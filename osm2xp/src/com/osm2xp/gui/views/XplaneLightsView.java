@@ -16,10 +16,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.ResourceManager;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import com.osm2xp.gui.views.panels.xplane.StreetLightsDensityPanel;
-import com.osm2xp.gui.views.panels.xplane.StreetLightsPanel;
 import com.osm2xp.gui.views.panels.xplane.XplaneLightsRulesPanel;
-import com.osm2xp.gui.views.panels.xplane.XplaneObjectsRulesPanel;
 
 /**
  * XplaneLightsView.
@@ -59,15 +56,14 @@ public class XplaneLightsView extends ViewPart implements IContextProvider {
 		layout.horizontalSpacing = 10;
 		form.getBody().setLayout(layout);
 
-	
 		/**
-		 *  lights
+		 * lights
 		 */
 
-		Section sectionLights = toolkit.createSection(
-				form.getBody(), Section.TWISTIE | Section.TITLE_BAR);
-		sectionLights.setLayoutData(new TableWrapData(
-				TableWrapData.FILL_GRAB, TableWrapData.TOP, 1, 1));
+		Section sectionLights = toolkit.createSection(form.getBody(),
+				Section.TWISTIE | Section.EXPANDED | Section.TITLE_BAR);
+		sectionLights.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB,
+				TableWrapData.TOP, 1, 1));
 
 		sectionLights.setText("Lights");
 		XplaneLightsRulesPanel lightsPanel = new XplaneLightsRulesPanel(
@@ -75,7 +71,6 @@ public class XplaneLightsView extends ViewPart implements IContextProvider {
 		toolkit.adapt(lightsPanel, true, true);
 		sectionLights.setClient(lightsPanel);
 
-	
 	}
 
 	/**
