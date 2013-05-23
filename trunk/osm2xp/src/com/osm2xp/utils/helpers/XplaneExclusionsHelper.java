@@ -73,7 +73,6 @@ public class XplaneExclusionsHelper extends Thread {
 	}
 
 	public void optimiseExclusion() {
-		// System.out.println("Optimise Exclusion, size:"+exclusions.size());
 		List<Box2D> footprintsToRemove = new ArrayList<Box2D>();
 		List<Box2D> footprintsToAdd = new ArrayList<Box2D>();
 		optimisationLoop: for (Box2D footprint : exclusions) {
