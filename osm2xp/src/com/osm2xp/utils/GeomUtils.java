@@ -790,13 +790,13 @@ public class GeomUtils {
 		}
 
 		// check intersections
-		for (LinearShape2D line : box1.getEdges()) {
-			for (LinearShape2D line2 : box2.getEdges()) {
-				if (line.getIntersection(line2) != null) {
-					return true;
-				}
-			}
-		}
+//		for (LinearShape2D line : box1.getEdges()) {
+//			for (LinearShape2D line2 : box2.getEdges()) {
+//				if (line.getIntersection(line2) != null) {
+//					return true;
+//				}
+//			}
+//		}
 
 		return false;
 	}
