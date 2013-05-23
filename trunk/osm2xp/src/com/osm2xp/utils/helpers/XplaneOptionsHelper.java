@@ -11,6 +11,8 @@ import com.osm2xp.model.options.BuildingsExclusionsList;
 import com.osm2xp.model.options.FacadesRulesList;
 import com.osm2xp.model.options.ForestTagRule;
 import com.osm2xp.model.options.ForestsRulesList;
+import com.osm2xp.model.options.LightTagRule;
+import com.osm2xp.model.options.LightsRulesList;
 import com.osm2xp.model.options.ObjectFile;
 import com.osm2xp.model.options.ObjectsList;
 import com.osm2xp.model.options.ObjectsRulesList;
@@ -72,6 +74,7 @@ public class XplaneOptionsHelper extends OptionsHelper {
 		result.setBuildingsExclusions(createNewXplaneExclusions());
 		result.setForestsRules(createNewForestRules());
 		result.setObjectsRules(createNewObjectsRules());
+		result.setLightsRules(createNewLightsRules());
 		result.setStreetLightObjects(createNewStreetLightsObjects());
 		result.setFacadesRules(new FacadesRulesList());
 		result.setMinHouseSegment(2);
@@ -203,6 +206,29 @@ public class XplaneOptionsHelper extends OptionsHelper {
 					}
 				}, 255));
 		ForestsRulesList result = new ForestsRulesList(forestsRules);
+		return result;
+
+	}
+
+	/**
+	 * @return
+	 */
+	@SuppressWarnings("serial")
+	private static LightsRulesList createNewLightsRules() {
+		List<LightTagRule> lightsRules = new ArrayList<LightTagRule>();
+		lightsRules.add(new LightTagRule(new Tag("amenty", "parking"),
+				new ArrayList<ObjectFile>() {
+					{
+						add(new ObjectFile("opensceneryx/lights/1.obj"));
+					}
+				}, 5, 4));
+		lightsRules.add(new LightTagRule(new Tag("building", "yes"),
+				new ArrayList<ObjectFile>() {
+					{
+						add(new ObjectFile("opensceneryx/lights/2.obj"));
+					}
+				}, 5, 4));
+		LightsRulesList result = new LightsRulesList(lightsRules);
 		return result;
 
 	}

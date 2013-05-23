@@ -4,18 +4,17 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 
+import javax.swing.SpinnerDateModel;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
@@ -33,6 +32,7 @@ import com.osm2xp.constants.MessagesConstants;
 import com.osm2xp.exceptions.Osm2xpBusinessException;
 import com.osm2xp.gui.components.FilesPathsTable;
 import com.osm2xp.gui.components.TagsRulesTable;
+import com.osm2xp.model.options.LightTagRule;
 import com.osm2xp.model.options.ObjectFile;
 import com.osm2xp.model.options.XplaneObjectTagRule;
 import com.osm2xp.model.osm.Tag;
@@ -53,9 +53,11 @@ public class XplaneLightsRulesPanel extends Composite {
 	final Group grpFiles;
 	private static final String[] FILTER_NAMES = { "XML lights rules file (*.xml)" };
 	private static final String[] FILTER_EXTS = { "*.xml" };
-	private XplaneObjectTagRule selectedXplaneObjectTagRule;
+	private LightTagRule selectedXplaneLightTagRule;
 	private Composite compositeRuleDetail;
-	
+	private Spinner spinnerHeight;
+	private Spinner spinnerOffset;
+
 	public XplaneLightsRulesPanel(final Composite parent, int style) {
 		super(parent, style);
 
@@ -74,16 +76,16 @@ public class XplaneLightsRulesPanel extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				XplaneOptionsHelper
 						.getOptions()
-						.getObjectsRules()
+						.getLightsRules()
 						.getRules()
-						.add(new XplaneObjectTagRule(new Tag("a tag key",
+						.add(new LightTagRule(new Tag("a tag key",
 								"a tag value"), new ArrayList<ObjectFile>() {
 							{
-								add(new ObjectFile("the path to an Object file"));
+								add(new ObjectFile(
+										"the path to a light Object file"));
 
 							}
-						}, 0, true, false, false, 0, 0, 0, 0, false, 0,
-								0, false, false));
+						}, 5, 0));
 				tagsTable.getViewer().refresh();
 
 			}
@@ -124,7 +126,7 @@ public class XplaneLightsRulesPanel extends Composite {
 				if (fn != null) {
 					try {
 						XmlHelper.saveToXml(XplaneOptionsHelper.getOptions()
-								.getObjectsRules(), new File(fn));
+								.getLightsRules(), new File(fn));
 					} catch (Osm2xpBusinessException e1) {
 						Osm2xpLogger.error("Error saving rules to xml file "
 								+ new File(fn).getName(), e1);
@@ -149,7 +151,7 @@ public class XplaneLightsRulesPanel extends Composite {
 				if (fn != null) {
 					XplaneOptionsHelper.importObjectsRules(new File(fn));
 					tagsTable.updateInput(XplaneOptionsHelper.getOptions()
-							.getObjectsRules().getRules());
+							.getLightsRules().getRules());
 
 				}
 			}
@@ -164,11 +166,11 @@ public class XplaneLightsRulesPanel extends Composite {
 		groupTags.setLayoutData(gridData);
 		groupTags.setLayout(new FillLayout(SWT.HORIZONTAL));
 		tagsTable = new TagsRulesTable(groupTags, SWT.NONE, XplaneOptionsHelper
-				.getOptions().getObjectsRules().getRules());
+				.getOptions().getLightsRules().getRules());
 		tagsTable.setLayout(new FillLayout(SWT.HORIZONTAL));
 		tagsTable.getTable().addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				selectedXplaneObjectTagRule = (XplaneObjectTagRule) event.item
+				selectedXplaneLightTagRule = (LightTagRule) event.item
 						.getData();
 				updateRuleControls();
 			}
@@ -208,7 +210,7 @@ public class XplaneLightsRulesPanel extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				ObjectFile file = new ObjectFile();
 				file.setPath("SomePathTo" + File.separator + "aObjectFile.fac");
-				selectedXplaneObjectTagRule.getObjectsFiles().add(file);
+				selectedXplaneLightTagRule.getObjectsFiles().add(file);
 				ObjectsFilesTable.getViewer().refresh();
 			}
 		});
@@ -226,7 +228,7 @@ public class XplaneLightsRulesPanel extends Composite {
 						.getViewer().getSelection();
 				ObjectFile selectedFile = (ObjectFile) selection
 						.getFirstElement();
-				selectedXplaneObjectTagRule.getObjectsFiles().remove(
+				selectedXplaneLightTagRule.getObjectsFiles().remove(
 						selectedFile);
 				ObjectsFilesTable.getViewer().refresh();
 			}
@@ -244,36 +246,54 @@ public class XplaneLightsRulesPanel extends Composite {
 		tabPosition.setControl(compositeAngle);
 		compositeAngle.setLayout(new GridLayout(1, false));
 
-		Group grpAngle = new Group(compositeAngle, SWT.NONE);
-		grpAngle.setSize(316, 90);
-		grpAngle.setLayout(new GridLayout(2, false));
+		Group grpOptions = new Group(compositeAngle, SWT.NONE);
+		grpOptions.setSize(316, 90);
+		grpOptions.setLayout(new GridLayout(2, false));
 		GridData gd_grpAngle = new GridData(SWT.LEFT, SWT.TOP, false, true, 1,
 				1);
 		gd_grpAngle.heightHint = 107;
 		gd_grpAngle.widthHint = 373;
-		grpAngle.setLayoutData(gd_grpAngle);
-		grpAngle.setText("angle");
-		
-		Label lblNewLabel = new Label(grpAngle, SWT.NONE);
-		lblNewLabel.setText("Height");
-		
-		Spinner spinner = new Spinner(grpAngle, SWT.BORDER);
-		
-		Label lblNewLabel_1 = new Label(grpAngle, SWT.NONE);
-		lblNewLabel_1.setText("offset");
-		
-		Spinner spinner_1 = new Spinner(grpAngle, SWT.BORDER);
+		grpOptions.setLayoutData(gd_grpAngle);
+		grpOptions.setText("angle");
+
+		Label labelHeight = new Label(grpOptions, SWT.NONE);
+		labelHeight.setText("Height");
+
+		spinnerHeight = new Spinner(grpOptions, SWT.BORDER);
+		spinnerHeight.addModifyListener(new ModifyListener() {
+
+			@Override
+			public void modifyText(ModifyEvent e) {
+				selectedXplaneLightTagRule.setHeight(spinnerHeight
+						.getSelection());
+			}
+		});
+
+		Label labelOffset = new Label(grpOptions, SWT.NONE);
+		labelOffset.setText("offset");
+
+		spinnerOffset = new Spinner(grpOptions, SWT.BORDER);
+		spinnerOffset.addModifyListener(new ModifyListener() {
+
+			@Override
+			public void modifyText(ModifyEvent e) {
+				selectedXplaneLightTagRule.setOffset(spinnerOffset
+						.getSelection());
+			}
+		});
 	}
 
 	private void updateRuleControls() {
 
-		String selectedTag = selectedXplaneObjectTagRule.getTag().getKey()
-				+ "=" + selectedXplaneObjectTagRule.getTag().getValue();
+		String selectedTag = selectedXplaneLightTagRule.getTag().getKey() + "="
+				+ selectedXplaneLightTagRule.getTag().getValue();
 		grpFiles.setText(MessageFormat.format(
 				MessagesConstants.LABEL_FILES_OBJECT_RULE, selectedTag));
-	
+		spinnerHeight.setSelection(selectedXplaneLightTagRule.getHeight());
+		spinnerOffset.setSelection(selectedXplaneLightTagRule.getOffset());
+
 		try {
-			ObjectsFilesTable.updateSelectedRule(selectedXplaneObjectTagRule
+			ObjectsFilesTable.updateSelectedRule(selectedXplaneLightTagRule
 					.getObjectsFiles());
 		} catch (Osm2xpBusinessException e) {
 			Osm2xpLogger.error("Error updating rules table", e);

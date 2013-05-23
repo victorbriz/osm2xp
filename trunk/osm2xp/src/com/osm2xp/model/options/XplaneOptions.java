@@ -22,7 +22,8 @@ import javax.xml.bind.annotation.XmlType;
 		"generateSlopedRoofs", "lightsDensity", "packageFacades",
 		"hardBuildings", "lightObject", "facadeLod", "facadeSet",
 		"generateXmlStats", "generatePdfStats", "buildingsExclusions",
-		"forestsRules", "objectsRules", "facadesRules", "streetLightObjects" })
+		"forestsRules", "objectsRules", "lightsRules", "facadesRules",
+		"streetLightObjects" })
 @XmlRootElement(name = "XplaneOptions")
 public class XplaneOptions {
 
@@ -65,6 +66,8 @@ public class XplaneOptions {
 	protected ForestsRulesList forestsRules;
 	@XmlElement(name = "ObjectsRules", required = true)
 	protected XplaneObjectsRulesList objectsRules;
+	@XmlElement(name = "LightsRules", required = true)
+	protected LightsRulesList lightsRules;
 	@XmlElement(name = "FacadesRules", required = true)
 	protected FacadesRulesList facadesRules;
 	@XmlElement(name = "StreetLightObjects", required = true)
@@ -98,6 +101,7 @@ public class XplaneOptions {
 			final boolean generateXmlStats, final boolean generatePdfStats,
 			final BuildingsExclusionsList buildingsExclusions,
 			final ForestsRulesList forestsRules,
+			final LightsRulesList lightsRules,
 			final XplaneObjectsRulesList objectsRules,
 			final FacadesRulesList facadesRules,
 			final ObjectsList streetLightObjects,
@@ -137,6 +141,7 @@ public class XplaneOptions {
 		this.streetLightObjects = streetLightObjects;
 		this.smartExclusionDistance = smartExclusionDistance;
 		this.smartExclusionSize = smartExclusionSize;
+		this.lightsRules = lightsRules;
 	}
 
 	/**
@@ -724,6 +729,14 @@ public class XplaneOptions {
 
 	public void setSmartExclusionDistance(int smartExclusionDistance) {
 		this.smartExclusionDistance = smartExclusionDistance;
+	}
+
+	public LightsRulesList getLightsRules() {
+		return lightsRules;
+	}
+
+	public void setLightsRules(LightsRulesList lightsRules) {
+		this.lightsRules = lightsRules;
 	}
 
 }
