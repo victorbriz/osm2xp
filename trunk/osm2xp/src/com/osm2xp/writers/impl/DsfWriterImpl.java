@@ -2,15 +2,14 @@ package com.osm2xp.writers.impl;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
-
 import math.geom2d.Point2D;
+
+import org.apache.commons.io.FileUtils;
 
 import com.osm2xp.constants.XplaneConstants;
 import com.osm2xp.utils.DsfObjectsProvider;

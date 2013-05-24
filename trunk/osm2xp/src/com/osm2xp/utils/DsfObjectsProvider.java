@@ -3,8 +3,12 @@ package com.osm2xp.utils;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import math.geom2d.polygon.LinearRing2D;
 
@@ -40,23 +44,19 @@ public class DsfObjectsProvider {
 	private FacadeSet facadeSet;
 	private List<Facade> slopedHousesList;
 	private List<Facade> facadesWithRoofColorList;
-	private static int slope;
+	private Map<String, Integer> dsfRessourceList = new HashMap<String, Integer>();
 
 	/**
 	 * @param facadeSet
 	 */
 	public DsfObjectsProvider(FacadeSet facadeSet) {
 		this.facadeSet = facadeSet;
-		computePolygonsList();
-		compute3dObjectsList();
 	}
 
 	/**
 	 * @param facadeSet
 	 */
 	public DsfObjectsProvider() {
-		computePolygonsList();
-		compute3dObjectsList();
 	}
 
 	/**
@@ -164,7 +164,7 @@ public class DsfObjectsProvider {
 			for (Facade facade : this.getSlopedHousesList()) {
 				if ((facade.getMinVectorLength() <= minVector && facade
 						.getMaxVectorLength() >= minVector)) {
-					return polygonsList.indexOf(facade.getFile());
+					return getIndexOfDsfRessource(facade.getFile());
 				}
 			}
 		}
@@ -224,7 +224,7 @@ public class DsfObjectsProvider {
 		}
 
 		if (facadeResult != null) {
-			result = polygonsList.indexOf(facadeResult.getFile());
+			result = getIndexOfDsfRessource(facadeResult.getFile());
 		}
 
 		return result;
@@ -236,7 +236,7 @@ public class DsfObjectsProvider {
 			for (Facade facade : this.facadeSet.getFacades()) {
 				if ((facade.isCommercial() || facade.isIndustrial())
 						&& !facade.isSimpleBuildingOnly()) {
-					return polygonsList.indexOf(facade.getFile());
+					return getIndexOfDsfRessource(facade.getFile());
 				}
 			}
 		}
@@ -258,7 +258,7 @@ public class DsfObjectsProvider {
 							&& (facade.getMaxHeight() == 0 || (facade
 									.getMaxHeight() != 0 && facade
 									.getMaxHeight() >= height))) {
-						return polygonsList.indexOf(facade.getFile());
+						return getIndexOfDsfRessource(facade.getFile());
 					}
 				}
 			}
@@ -283,7 +283,7 @@ public class DsfObjectsProvider {
 						&& facade.isSloped()
 						&& (facade.getMinVectorLength() <= minVector && facade
 								.getMaxVectorLength() >= minVector)) {
-					return polygonsList.indexOf(facade.getFile());
+					return getIndexOfDsfRessource(facade.getFile());
 				}
 			}
 		}
@@ -299,11 +299,25 @@ public class DsfObjectsProvider {
 			Collections.shuffle(facadeSet.getFacades());
 			for (Facade facade : this.facadeSet.getFacades()) {
 				if (facade.isResidential() && !facade.isSimpleBuildingOnly()) {
-					return polygonsList.indexOf(facade.getFile());
+					return getIndexOfDsfRessource(facade.getFile());
 				}
 			}
 		}
 		return null;
+	}
+
+	private int getIndexOfDsfRessource(String ressource) {
+
+		// check existing ressource
+		for (int i = 0; i < polygonsList.size(); i++) {
+			if (polygonsList.get(i).equals(ressource)) {
+				return i;
+			}
+		}
+		// ressource not in dsf list, add it
+		polygonsList.add(ressource);
+		return polygonsList.size() - 1;
+
 	}
 
 	/**
@@ -317,7 +331,7 @@ public class DsfObjectsProvider {
 			for (Facade facade : this.facadeSet.getFacades()) {
 				if (facade.isResidential() && facade.isSimpleBuildingOnly()
 						&& !facade.isSloped()) {
-					return polygonsList.indexOf(facade.getFile());
+					return getIndexOfDsfRessource(facade.getFile());
 				}
 			}
 		}
@@ -358,92 +372,14 @@ public class DsfObjectsProvider {
 				}
 			}
 			if (facadeResult != null) {
-				result = polygonsList.indexOf(facadeResult.getFile());
+				result = getIndexOfDsfRessource(facadeResult.getFile());
 			}
 		}
 		return result;
 
 	}
 
-	/**
-	 * @param facadeSet
-	 * @throws Osm2xpBusinessException
-	 */
-	public void computePolygonsList() {
-
-		facadesList.clear();
-		forestsList.clear();
-		polygonsList.clear();
-		singlesFacadesList.clear();
-
-		// BASIC BUILDINGS FACADES
-		if (XplaneOptionsHelper.getOptions().isGenerateBuildings()) {
-			for (Facade facade : facadeSet.getFacades()) {
-				facadesList.add(facade.getFile());
-			}
-			polygonsList.addAll(facadesList);
-		}
-
-		// FACADES RULES
-		if (!XplaneOptionsHelper.getOptions().getFacadesRules().getRules()
-				.isEmpty()) {
-			for (FacadeTagRule facadeTagRule : XplaneOptionsHelper.getOptions()
-					.getFacadesRules().getRules()) {
-				for (ObjectFile file : facadeTagRule.getObjectsFiles()) {
-					if (!singlesFacadesList.contains(file.getPath())) {
-						singlesFacadesList.add(file.getPath());
-					}
-				}
-			}
-			polygonsList.addAll(singlesFacadesList);
-		}
-
-		// FORESTS RULES
-		if (XplaneOptionsHelper.getOptions().isGenerateFor()) {
-
-			for (ForestTagRule forest : XplaneOptionsHelper.getOptions()
-					.getForestsRules().getRules()) {
-				for (ObjectFile file : forest.getObjectsFiles()) {
-					if (!forestsList.contains(file.getPath())) {
-						forestsList.add(file.getPath());
-					}
-
-				}
-			}
-			polygonsList.addAll(forestsList);
-
-		}
-
-	}
-
-	/**
-	 * 
-	 */
-	public void compute3dObjectsList() {
-		objectsList.clear();
-		// add 3D objects
-		for (XplaneObjectTagRule object : XplaneOptionsHelper.getOptions()
-				.getObjectsRules().getRules()) {
-			for (ObjectFile file : object.getObjectsFiles()) {
-				if (!objectsList.contains(file.getPath())) {
-					objectsList.add(file.getPath());
-				}
-
-			}
-		}
-
-		// add streetlights objects
-		if (XplaneOptionsHelper.getOptions().isGenerateStreetLights()) {
-
-			for (ObjectFile file : XplaneOptionsHelper.getOptions()
-					.getStreetLightObjects().getObjects()) {
-				if (!objectsList.contains(file.getPath())) {
-					objectsList.add(file.getPath());
-					streetLightObjectsList.add(file.getPath());
-				}
-			}
-		}
-	}
+	
 
 	/**
 	 * @param facadeTagRule
@@ -452,7 +388,7 @@ public class DsfObjectsProvider {
 	public Integer getRandomSingleFacade(FacadeTagRule facadeTagRule) {
 		Collections.shuffle(singlesFacadesList);
 		String randomSingleFacade = singlesFacadesList.get(0);
-		return polygonsList.indexOf(randomSingleFacade);
+		return getIndexOfDsfRessource(randomSingleFacade);
 	}
 
 	/**
@@ -462,7 +398,7 @@ public class DsfObjectsProvider {
 	public Integer getRandomObject(XplaneObjectTagRule objectTagRule) {
 		Collections.shuffle(objectTagRule.getObjectsFiles());
 		String objectFile = objectTagRule.getObjectsFiles().get(0).getPath();
-		return objectsList.indexOf(objectFile);
+		return getIndexOfDsfRessource(objectFile);
 	}
 
 	/**
@@ -471,7 +407,7 @@ public class DsfObjectsProvider {
 	public Integer getRandomStreetLightObject() {
 		Collections.shuffle(streetLightObjectsList);
 		String objectFile = streetLightObjectsList.get(0);
-		return objectsList.indexOf(objectFile);
+		return getIndexOfDsfRessource(objectFile);
 	}
 
 	/**
@@ -481,7 +417,7 @@ public class DsfObjectsProvider {
 	public Integer getRandomForest(ForestTagRule forestTagRule) {
 		Collections.shuffle(forestTagRule.getObjectsFiles());
 		String forestFile = forestTagRule.getObjectsFiles().get(0).getPath();
-		return polygonsList.indexOf(forestFile);
+		return getIndexOfDsfRessource(forestFile);
 	}
 
 	/**
@@ -716,6 +652,14 @@ public class DsfObjectsProvider {
 			computeSlopedHousesFacadesList();
 		}
 		return slopedHousesList;
+	}
+
+	public Map<String, Integer> getDsfRessourceList() {
+		return dsfRessourceList;
+	}
+
+	public void setDsfRessourceList(Map<String, Integer> dsfRessourceList) {
+		this.dsfRessourceList = dsfRessourceList;
 	}
 
 }
