@@ -301,7 +301,7 @@ public class DsfUtils {
 		if (XplaneOptionsHelper.getOptions().isExcludeObj()) {
 			// smart OBJ exclusion
 			if (XplaneOptionsHelper.getOptions().isSmartExclusions()) {
-				sb.append(XplaneConstants.EXCLUSION_PLACEHOLDER+"\n");
+				sb.append(XplaneConstants.EXCLUSION_PLACEHOLDER + "\n");
 			} else {
 				sb.append("PROPERTY sim/exclude_obj " + tileCoordinate);
 			}
@@ -380,42 +380,50 @@ public class DsfUtils {
 		sb.append("PROPERTY sim/north " + (latitude + 1) + "\n");
 		sb.append("PROPERTY sim/south " + latitude + "\n\n");
 
-		// add singles facades objects
-		if (dsfObjectsProvider.getSinglesFacadesList() != null) {
-			for (String facadeTagRule : dsfObjectsProvider
-					.getSinglesFacadesList()) {
-				sb.append("POLYGON_DEF singlesFacades\\" + facadeTagRule + "\n");
-			}
+
+
+		for (String ressource : dsfObjectsProvider.getPolygonsList()) {
+			sb.append(ressource + "\n");
 		}
 
-		// forests files
-		if (dsfObjectsProvider.getForestsList() != null) {
-			for (String forest : dsfObjectsProvider.getForestsList()) {
-				sb.append("POLYGON_DEF " + forest + "\n");
-			}
-		}
+		// // add singles facades objects
+		// if (dsfObjectsProvider.getSinglesFacadesList() != null) {
+		// for (String facadeTagRule : dsfObjectsProvider
+		// .getSinglesFacadesList()) {
+		// sb.append("POLYGON_DEF singlesFacades\\" + facadeTagRule + "\n");
+		// }
+		// }
+		//
+		// // forests files
+		// if (dsfObjectsProvider.getForestsList() != null) {
+		// for (String forest : dsfObjectsProvider.getForestsList()) {
+		// sb.append("POLYGON_DEF " + forest + "\n");
+		// }
+		// }
+		//
+		// // facades files
+		// if (dsfObjectsProvider.getFacadesList() != null) {
+		// for (String facade : dsfObjectsProvider.getFacadesList()) {
+		// String facadeDeclaration = null;
+		// if (!XplaneOptionsHelper.getOptions().isPackageFacades()) {
+		//
+		// facadeDeclaration = "POLYGON_DEF \\lib\\osm2xp\\facades\\"
+		// + facade + "\n";
+		// } else {
+		// facadeDeclaration = "POLYGON_DEF facades\\" + facade + "\n";
+		// }
+		// sb.append(facadeDeclaration);
+		// }
+		// sb.append("\n");
+		// }
+		//
+		// if (dsfObjectsProvider.getObjectsList() != null) {
+		// for (String objectPath : dsfObjectsProvider.getObjectsList()) {
+		// sb.append("OBJECT_DEF " + objectPath + "\n");
+		// }
+		// }
 
-		// facades files
-		if (dsfObjectsProvider.getFacadesList() != null) {
-			for (String facade : dsfObjectsProvider.getFacadesList()) {
-				String facadeDeclaration = null;
-				if (!XplaneOptionsHelper.getOptions().isPackageFacades()) {
-
-					facadeDeclaration = "POLYGON_DEF \\lib\\osm2xp\\facades\\"
-							+ facade + "\n";
-				} else {
-					facadeDeclaration = "POLYGON_DEF facades\\" + facade + "\n";
-				}
-				sb.append(facadeDeclaration);
-			}
-			sb.append("\n");
-		}
-
-		if (dsfObjectsProvider.getObjectsList() != null) {
-			for (String objectPath : dsfObjectsProvider.getObjectsList()) {
-				sb.append("OBJECT_DEF " + objectPath + "\n");
-			}
-		}
+		// dsf reccources
 		return sb.toString();
 
 	}

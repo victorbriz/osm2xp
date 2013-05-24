@@ -16,10 +16,10 @@ import com.osm2xp.model.osm.Way;
 import com.osm2xp.model.stats.GenerationStats;
 import com.osm2xp.model.xplane.XplaneDsfObject;
 import com.osm2xp.translators.ITranslator;
-import com.osm2xp.utils.DsfObjectsProvider;
 import com.osm2xp.utils.GeomUtils;
 import com.osm2xp.utils.MiscUtils;
 import com.osm2xp.utils.OsmUtils;
+import com.osm2xp.utils.DsfObjectsProvider;
 import com.osm2xp.utils.helpers.GuiOptionsHelper;
 import com.osm2xp.utils.helpers.StatsHelper;
 import com.osm2xp.utils.helpers.XplaneOptionsHelper;
@@ -132,10 +132,6 @@ public class Xplane9TranslatorImpl implements ITranslator {
 
 	@Override
 	public void init() {
-		// dsf object computes polygons list for dsf header
-		dsfObjectsProvider.computePolygonsList();
-		// dsf object computes 3d objects list for dsf header
-		dsfObjectsProvider.compute3dObjectsList();
 		// writer initialization
 		writer.init(currentTile);
 
