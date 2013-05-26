@@ -4,8 +4,6 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 
-import javax.swing.SpinnerDateModel;
-
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -32,9 +30,8 @@ import com.osm2xp.constants.MessagesConstants;
 import com.osm2xp.exceptions.Osm2xpBusinessException;
 import com.osm2xp.gui.components.FilesPathsTable;
 import com.osm2xp.gui.components.TagsRulesTable;
-import com.osm2xp.model.options.LightTagRule;
 import com.osm2xp.model.options.ObjectFile;
-import com.osm2xp.model.options.XplaneObjectTagRule;
+import com.osm2xp.model.options.XplaneLightTagRule;
 import com.osm2xp.model.osm.Tag;
 import com.osm2xp.utils.helpers.XmlHelper;
 import com.osm2xp.utils.helpers.XplaneOptionsHelper;
@@ -53,10 +50,11 @@ public class XplaneLightsRulesPanel extends Composite {
 	final Group grpFiles;
 	private static final String[] FILTER_NAMES = { "XML lights rules file (*.xml)" };
 	private static final String[] FILTER_EXTS = { "*.xml" };
-	private LightTagRule selectedXplaneLightTagRule;
+	private XplaneLightTagRule selectedXplaneLightTagRule;
 	private Composite compositeRuleDetail;
 	private Spinner spinnerHeight;
 	private Spinner spinnerOffset;
+	private Spinner spinnerPercentage;
 
 	public XplaneLightsRulesPanel(final Composite parent, int style) {
 		super(parent, style);
@@ -78,14 +76,14 @@ public class XplaneLightsRulesPanel extends Composite {
 						.getOptions()
 						.getLightsRules()
 						.getRules()
-						.add(new LightTagRule(new Tag("a tag key",
+						.add(new XplaneLightTagRule(new Tag("a tag key",
 								"a tag value"), new ArrayList<ObjectFile>() {
 							{
 								add(new ObjectFile(
 										"the path to a light Object file"));
 
 							}
-						}, 5, 0));
+						}, 5, 0, 20));
 				tagsTable.getViewer().refresh();
 
 			}
@@ -100,10 +98,10 @@ public class XplaneLightsRulesPanel extends Composite {
 			public void widgetSelected(SelectionEvent e) {
 				IStructuredSelection selection = (IStructuredSelection) tagsTable
 						.getViewer().getSelection();
-				XplaneObjectTagRule selectedXplaneObjectTagRule = (XplaneObjectTagRule) selection
+				XplaneLightTagRule selectedXplaneLightTagRule = (XplaneLightTagRule) selection
 						.getFirstElement();
-				XplaneOptionsHelper.getOptions().getObjectsRules().getRules()
-						.remove(selectedXplaneObjectTagRule);
+				XplaneOptionsHelper.getOptions().getLightsRules().getRules()
+						.remove(selectedXplaneLightTagRule);
 				compositeRuleDetail.setVisible(false);
 				tagsTable.getViewer().refresh();
 			}
@@ -170,7 +168,7 @@ public class XplaneLightsRulesPanel extends Composite {
 		tagsTable.setLayout(new FillLayout(SWT.HORIZONTAL));
 		tagsTable.getTable().addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				selectedXplaneLightTagRule = (LightTagRule) event.item
+				selectedXplaneLightTagRule = (XplaneLightTagRule) event.item
 						.getData();
 				updateRuleControls();
 			}
@@ -239,14 +237,14 @@ public class XplaneLightsRulesPanel extends Composite {
 		ObjectsFilesTable.setLayout(new FillLayout(SWT.HORIZONTAL));
 		new Label(grpFiles, SWT.NONE);
 
-		TabItem tabPosition = new TabItem(tabFolder, SWT.NONE);
-		tabPosition.setText("Positioning");
+		TabItem tabOptions = new TabItem(tabFolder, SWT.NONE);
+		tabOptions.setText("Options");
 
-		Composite compositeAngle = new Composite(tabFolder, SWT.NONE);
-		tabPosition.setControl(compositeAngle);
-		compositeAngle.setLayout(new GridLayout(1, false));
+		Composite compositeOptions = new Composite(tabFolder, SWT.NONE);
+		tabOptions.setControl(compositeOptions);
+		compositeOptions.setLayout(new GridLayout(1, false));
 
-		Group grpOptions = new Group(compositeAngle, SWT.NONE);
+		Group grpOptions = new Group(compositeOptions, SWT.NONE);
 		grpOptions.setSize(316, 90);
 		grpOptions.setLayout(new GridLayout(2, false));
 		GridData gd_grpAngle = new GridData(SWT.LEFT, SWT.TOP, false, true, 1,
@@ -271,7 +269,6 @@ public class XplaneLightsRulesPanel extends Composite {
 
 		Label labelOffset = new Label(grpOptions, SWT.NONE);
 		labelOffset.setText("offset");
-
 		spinnerOffset = new Spinner(grpOptions, SWT.BORDER);
 		spinnerOffset.addModifyListener(new ModifyListener() {
 
@@ -281,6 +278,23 @@ public class XplaneLightsRulesPanel extends Composite {
 						.getSelection());
 			}
 		});
+
+		Label lblPercentage = new Label(grpOptions, SWT.NONE);
+		lblPercentage.setText("Percentage");
+
+		spinnerPercentage = new Spinner(grpOptions, SWT.BORDER);
+		spinnerPercentage.setMaximum(100);
+		spinnerPercentage.setMinimum(0);
+		spinnerPercentage.setIncrement(1);
+		spinnerPercentage.addModifyListener(new ModifyListener() {
+
+			@Override
+			public void modifyText(ModifyEvent e) {
+				selectedXplaneLightTagRule.setPercentage(spinnerPercentage
+						.getSelection());
+			}
+		});
+
 	}
 
 	private void updateRuleControls() {
@@ -291,6 +305,8 @@ public class XplaneLightsRulesPanel extends Composite {
 				MessagesConstants.LABEL_FILES_OBJECT_RULE, selectedTag));
 		spinnerHeight.setSelection(selectedXplaneLightTagRule.getHeight());
 		spinnerOffset.setSelection(selectedXplaneLightTagRule.getOffset());
+		spinnerPercentage.setSelection(selectedXplaneLightTagRule
+				.getPercentage());
 
 		try {
 			ObjectsFilesTable.updateSelectedRule(selectedXplaneLightTagRule

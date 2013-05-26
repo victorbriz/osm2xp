@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
-import com.osm2xp.model.options.TagsRules;
+import com.osm2xp.model.options.TagsRule;
 
 /**
  * TagsRulesTable
@@ -33,7 +33,7 @@ public class TagsRulesTable extends Composite {
 	private Table table;
 
 	public TagsRulesTable(Composite parent, int style,
-			List<? extends TagsRules> listeTags) {
+			List<? extends TagsRule> listeTags) {
 		super(parent, style);
 
 		GridLayout layout = new GridLayout(2, false);
@@ -42,13 +42,13 @@ public class TagsRulesTable extends Composite {
 
 	}
 
-	public void updateInput(List<? extends TagsRules> tagsList) {
+	public void updateInput(List<? extends TagsRule> tagsList) {
 		viewer.setInput(tagsList);
 		viewer.refresh();
 	}
 
 	private void createViewer(Composite parent,
-			List<? extends TagsRules> listeTags) {
+			List<? extends TagsRule> listeTags) {
 		viewer = new TableViewer(parent, SWT.FULL_SELECTION);
 		createColumns(parent, viewer);
 
@@ -103,7 +103,7 @@ public class TagsRulesTable extends Composite {
 		colKey.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				TagsRules p = ((TagsRules) element);
+				TagsRule p = ((TagsRule) element);
 				return p.getTag().getKey();
 			}
 		});
@@ -121,12 +121,12 @@ public class TagsRulesTable extends Composite {
 
 			@Override
 			protected Object getValue(Object element) {
-				return ((TagsRules) element).getTag().getKey();
+				return ((TagsRule) element).getTag().getKey();
 			}
 
 			@Override
 			protected void setValue(Object element, Object value) {
-				((TagsRules) element).getTag().setKey((String) value);
+				((TagsRule) element).getTag().setKey((String) value);
 				getViewer().refresh();
 			}
 		});
@@ -139,7 +139,7 @@ public class TagsRulesTable extends Composite {
 		colValue.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				TagsRules p = (TagsRules) element;
+				TagsRule p = (TagsRule) element;
 				return p.getTag().getValue();
 			}
 		});
@@ -157,12 +157,12 @@ public class TagsRulesTable extends Composite {
 
 			@Override
 			protected Object getValue(Object element) {
-				return ((TagsRules) element).getTag().getValue();
+				return ((TagsRule) element).getTag().getValue();
 			}
 
 			@Override
 			protected void setValue(Object element, Object value) {
-				((TagsRules) element).getTag().setValue((String) value);
+				((TagsRule) element).getTag().setValue((String) value);
 				getViewer().refresh();
 			}
 		});

@@ -361,15 +361,15 @@ public class DsfUtils {
 		sb.append("DSF2TEXT\n\n");
 		sb.append("PROPERTY sim/planet earth\n");
 		sb.append("PROPERTY sim/overlay 1\n");
-		if (XplaneOptionsHelper.getOptions().isGenerateStreetLights()) {
-			// we set the require index so only streetlights objects will
-			// disappear when using the objects number slider in xplane
-			int requireIndex = dsfObjectsProvider.getStreetLightObjectsList()
-					.size();
-			sb.append("PROPERTY sim/require_object 1/" + requireIndex + "\n");
-		} else {
+//		if (XplaneOptionsHelper.getOptions().isGenerateStreetLights()) {
+//			// we set the require index so only streetlights objects will
+//			// disappear when using the objects number slider in xplane
+//			int requireIndex = dsfObjectsProvider.getStreetLightObjectsList()
+//					.size();
+//			sb.append("PROPERTY sim/require_object 1/" + requireIndex + "\n");
+//		} else {
 			sb.append("PROPERTY sim/require_object 1/0\n");
-		}
+		//}
 		sb.append("PROPERTY sim/require_facade 6/0\n");
 		sb.append("PROPERTY sim/creation_agent Osm2Xp "
 				+ Osm2xpConstants.OSM2XP_VERSION + " by Benjamin Blanchet \n");
@@ -380,50 +380,45 @@ public class DsfUtils {
 		sb.append("PROPERTY sim/north " + (latitude + 1) + "\n");
 		sb.append("PROPERTY sim/south " + latitude + "\n\n");
 
-
-
-		for (String ressource : dsfObjectsProvider.getPolygonsList()) {
-			sb.append(ressource + "\n");
+		// forests files
+		if (dsfObjectsProvider.getForestsList() != null) {
+			for (String forest : dsfObjectsProvider.getForestsList()) {
+				sb.append("POLYGON_DEF " + forest + "\n");
+			}
 		}
 
-		// // add singles facades objects
-		// if (dsfObjectsProvider.getSinglesFacadesList() != null) {
-		// for (String facadeTagRule : dsfObjectsProvider
-		// .getSinglesFacadesList()) {
-		// sb.append("POLYGON_DEF singlesFacades\\" + facadeTagRule + "\n");
-		// }
-		// }
-		//
-		// // forests files
-		// if (dsfObjectsProvider.getForestsList() != null) {
-		// for (String forest : dsfObjectsProvider.getForestsList()) {
-		// sb.append("POLYGON_DEF " + forest + "\n");
-		// }
-		// }
-		//
-		// // facades files
-		// if (dsfObjectsProvider.getFacadesList() != null) {
-		// for (String facade : dsfObjectsProvider.getFacadesList()) {
-		// String facadeDeclaration = null;
-		// if (!XplaneOptionsHelper.getOptions().isPackageFacades()) {
-		//
-		// facadeDeclaration = "POLYGON_DEF \\lib\\osm2xp\\facades\\"
-		// + facade + "\n";
-		// } else {
-		// facadeDeclaration = "POLYGON_DEF facades\\" + facade + "\n";
-		// }
-		// sb.append(facadeDeclaration);
-		// }
-		// sb.append("\n");
-		// }
-		//
-		// if (dsfObjectsProvider.getObjectsList() != null) {
-		// for (String objectPath : dsfObjectsProvider.getObjectsList()) {
-		// sb.append("OBJECT_DEF " + objectPath + "\n");
-		// }
-		// }
+		
+		// facades rules
+		if (dsfObjectsProvider.getSinglesFacadesList() != null) {
+			for (String facadeTagRule : dsfObjectsProvider
+					.getSinglesFacadesList()) {
+				sb.append("POLYGON_DEF " + facadeTagRule + "\n");
+			}
+		}
 
-		// dsf reccources
+
+		// facades files
+		if (dsfObjectsProvider.getFacadesList() != null) {
+			for (String facade : dsfObjectsProvider.getFacadesList()) {
+				String facadeDeclaration = null;
+				if (!XplaneOptionsHelper.getOptions().isPackageFacades()) {
+
+					facadeDeclaration = "POLYGON_DEF \\lib\\osm2xp\\facades\\"
+							+ facade + "\n";
+				} else {
+					facadeDeclaration = "POLYGON_DEF facades\\" + facade + "\n";
+				}
+				sb.append(facadeDeclaration);
+			}
+			sb.append("\n");
+		}
+
+		if (dsfObjectsProvider.getObjectsList() != null) {
+			for (String objectPath : dsfObjectsProvider.getObjectsList()) {
+				sb.append("OBJECT_DEF " + objectPath + "\n");
+			}
+		}
+
 		return sb.toString();
 
 	}

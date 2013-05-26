@@ -12,7 +12,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.osm2xp.exceptions.Osm2xpBusinessException;
 import com.osm2xp.model.options.ObjectFile;
-import com.osm2xp.model.options.TagsRules;
+import com.osm2xp.model.options.TagsRule;
 import com.osm2xp.model.osm.Node;
 import com.osm2xp.model.osm.OsmPolygon;
 import com.osm2xp.model.osm.Relation;
@@ -77,7 +77,7 @@ public class FlightGearTranslatorImpl implements ITranslator {
 		if (osmPolygon != null && osmPolygon.getNodes() != null) {
 			// check if the current polygon has some tags this translator wants
 			// to use
-			List<TagsRules> matchingTags = OsmUtils.getMatchingRules(
+			List<TagsRule> matchingTags = OsmUtils.getMatchingRules(
 					FlightGearOptionsHelper.getOptions().getObjectsRules()
 							.getRules(), osmPolygon);
 			if (matchingTags != null && !matchingTags.isEmpty()) {
@@ -94,7 +94,7 @@ public class FlightGearTranslatorImpl implements ITranslator {
 	}
 
 	private void injectPolygonIntoScenery(LinearRing2D polygon,
-			List<TagsRules> matchingTagsRules) {
+			List<TagsRule> matchingTagsRules) {
 
 		// simplify shape until we have a simple rectangle
 
@@ -102,7 +102,7 @@ public class FlightGearTranslatorImpl implements ITranslator {
 
 		// shuffle matching tags rules
 		Collections.shuffle(matchingTagsRules);
-		TagsRules logicRule = matchingTagsRules.get(0);
+		TagsRule logicRule = matchingTagsRules.get(0);
 		// shuffle objects
 		Collections.shuffle(logicRule.getObjectsFiles());
 		// select object that will be injected.

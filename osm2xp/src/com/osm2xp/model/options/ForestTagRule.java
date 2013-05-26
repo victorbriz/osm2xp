@@ -16,7 +16,7 @@ import com.osm2xp.model.osm.Tag;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ForestTagRule", propOrder = { "forestDensity" })
-public class ForestTagRule extends TagsRules {
+public class ForestTagRule extends TagsRule {
 
 	protected int forestDensity;
 

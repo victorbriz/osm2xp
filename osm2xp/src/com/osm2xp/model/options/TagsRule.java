@@ -18,9 +18,9 @@ import com.osm2xp.model.osm.Tag;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TagsRules", propOrder = { "tag", "objectsFiles" })
+@XmlType(name = "TagsRule", propOrder = { "tag", "objectsFiles" })
 @XmlSeeAlso({ ForestTagRule.class, FacadeTagRule.class, ObjectTagRule.class })
-public class TagsRules {
+public class TagsRule {
 
 	@XmlElement(required = true)
 	protected Tag tag;
@@ -31,7 +31,7 @@ public class TagsRules {
 	 * Default no-arg constructor
 	 * 
 	 */
-	public TagsRules() {
+	public TagsRule() {
 		super();
 	}
 
@@ -39,7 +39,7 @@ public class TagsRules {
 	 * Fully-initialising value constructor
 	 * 
 	 */
-	public TagsRules(final Tag tag, final List<ObjectFile> objectsFiles) {
+	public TagsRule(final Tag tag, final List<ObjectFile> objectsFiles) {
 		this.tag = tag;
 		this.objectsFiles = objectsFiles;
 	}

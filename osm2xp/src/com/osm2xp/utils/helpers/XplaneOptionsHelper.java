@@ -11,7 +11,7 @@ import com.osm2xp.model.options.BuildingsExclusionsList;
 import com.osm2xp.model.options.FacadesRulesList;
 import com.osm2xp.model.options.ForestTagRule;
 import com.osm2xp.model.options.ForestsRulesList;
-import com.osm2xp.model.options.LightTagRule;
+import com.osm2xp.model.options.XplaneLightTagRule;
 import com.osm2xp.model.options.LightsRulesList;
 import com.osm2xp.model.options.ObjectFile;
 import com.osm2xp.model.options.ObjectsList;
@@ -215,19 +215,7 @@ public class XplaneOptionsHelper extends OptionsHelper {
 	 */
 	@SuppressWarnings("serial")
 	private static LightsRulesList createNewLightsRules() {
-		List<LightTagRule> lightsRules = new ArrayList<LightTagRule>();
-		lightsRules.add(new LightTagRule(new Tag("amenty", "parking"),
-				new ArrayList<ObjectFile>() {
-					{
-						add(new ObjectFile("opensceneryx/lights/1.obj"));
-					}
-				}, 5, 4));
-		lightsRules.add(new LightTagRule(new Tag("building", "yes"),
-				new ArrayList<ObjectFile>() {
-					{
-						add(new ObjectFile("opensceneryx/lights/2.obj"));
-					}
-				}, 5, 4));
+		List<XplaneLightTagRule> lightsRules = new ArrayList<XplaneLightTagRule>();
 		LightsRulesList result = new LightsRulesList(lightsRules);
 		return result;
 

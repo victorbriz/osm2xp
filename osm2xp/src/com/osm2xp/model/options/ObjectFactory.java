@@ -158,11 +158,11 @@ public class ObjectFactory {
 	}
 
 	/**
-	 * Create an instance of {@link TagsRules }
+	 * Create an instance of {@link TagsRule }
 	 * 
 	 */
-	public TagsRules createTagsRules() {
-		return new TagsRules();
+	public TagsRule createTagsRules() {
+		return new TagsRule();
 	}
 
 	/**

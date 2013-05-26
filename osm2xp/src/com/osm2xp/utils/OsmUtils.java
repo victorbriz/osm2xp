@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 import com.osm2xp.constants.Osm2xpConstants;
 import com.osm2xp.model.options.ForestTagRule;
-import com.osm2xp.model.options.TagsRules;
+import com.osm2xp.model.options.TagsRule;
 import com.osm2xp.model.options.XplaneObjectTagRule;
 import com.osm2xp.model.osm.Node;
 import com.osm2xp.model.osm.OsmPolygon;
@@ -144,11 +144,11 @@ public class OsmUtils {
 	 * @param tagsList2
 	 * @return
 	 */
-	public static List<TagsRules> getMatchingRules(
-			List<? extends TagsRules> tagsRulesList, OsmPolygon osmPolygon) {
+	public static List<TagsRule> getMatchingRules(
+			List<? extends TagsRule> tagsRulesList, OsmPolygon osmPolygon) {
 
-		List<TagsRules> result = new ArrayList<TagsRules>();
-		for (TagsRules tagsRules : tagsRulesList) {
+		List<TagsRule> result = new ArrayList<TagsRule>();
+		for (TagsRule tagsRules : tagsRulesList) {
 			for (Tag polygonTag : osmPolygon.getTags()) {
 				// first check if the current tag is looking for a osm polygon
 				// id
