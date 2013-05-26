@@ -15,19 +15,19 @@ import com.osm2xp.model.osm.Tag;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "LightTagRule", propOrder = { "height", "offset" })
-public class LightTagRule extends TagsRules {
+@XmlType(name = "XplaneLightTagRule", propOrder = { "height", "offset",
+		"percentage" })
+public class XplaneLightTagRule extends TagsRule {
 
 	protected int height;
 	protected int offset;
-
-
+	protected int percentage;
 
 	/**
 	 * Default no-arg constructor
 	 * 
 	 */
-	public LightTagRule() {
+	public XplaneLightTagRule() {
 		super();
 	}
 
@@ -35,11 +35,13 @@ public class LightTagRule extends TagsRules {
 	 * Fully-initialising value constructor
 	 * 
 	 */
-	public LightTagRule(final Tag tag, final List<ObjectFile> objectsFiles,
-			final int height, final int offset) {
+	public XplaneLightTagRule(final Tag tag,
+			final List<ObjectFile> objectsFiles, final int height,
+			final int offset, final int percentage) {
 		super(tag, objectsFiles);
 		this.height = height;
 		this.offset = offset;
+		this.percentage = percentage;
 
 	}
 
@@ -50,12 +52,21 @@ public class LightTagRule extends TagsRules {
 	public void setHeight(int height) {
 		this.height = height;
 	}
+
 	public int getOffset() {
 		return offset;
 	}
 
 	public void setOffset(int offset) {
 		this.offset = offset;
+	}
+
+	public int getPercentage() {
+		return percentage;
+	}
+
+	public void setPercentage(int percentage) {
+		this.percentage = percentage;
 	}
 
 }

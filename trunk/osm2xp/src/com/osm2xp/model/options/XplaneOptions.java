@@ -739,4 +739,8 @@ public class XplaneOptions {
 		this.lightsRules = lightsRules;
 	}
 
+	public boolean isGenerateLights() {
+		return true;
+	}
+
 }

@@ -14,6 +14,7 @@ import com.osm2xp.model.osm.Relation;
 import com.osm2xp.model.osm.Tag;
 import com.osm2xp.model.osm.Way;
 import com.osm2xp.model.stats.GenerationStats;
+import com.osm2xp.model.xplane.XplaneDsf3DObject;
 import com.osm2xp.model.xplane.XplaneDsfObject;
 import com.osm2xp.translators.ITranslator;
 import com.osm2xp.utils.GeomUtils;
@@ -103,7 +104,7 @@ public class Xplane10TranslatorImpl implements ITranslator {
 
 	@Override
 	public void complete() {
-		
+
 		// if smart exclusions enabled, send them to writer
 		if (XplaneOptionsHelper.getOptions().isSmartExclusions()) {
 			String exclusions = exclusionsHelper.exportExclusions();
@@ -112,7 +113,7 @@ public class Xplane10TranslatorImpl implements ITranslator {
 		} else {
 			writer.complete(null);
 		}
-		
+
 		if (!StatsHelper.isTileEmpty(stats)) {
 			Osm2xpLogger.info("stats : " + stats.getBuildingsNumber()
 					+ " buildings, " + stats.getForestsNumber() + " forests, "
@@ -142,7 +143,6 @@ public class Xplane10TranslatorImpl implements ITranslator {
 			Osm2xpLogger.info("Tile " + (int) currentTile.x + "/"
 					+ (int) currentTile.y + " is empty, no dsf generated");
 		}
-
 
 	}
 
@@ -395,7 +395,7 @@ public class Xplane10TranslatorImpl implements ITranslator {
 	 *            a xplane dsf object
 	 * @throws Osm2xpBusinessException
 	 */
-	private void write3dObjectToDsf(XplaneDsfObject object)
+	private void writeObjectToDsf(XplaneDsfObject object)
 			throws Osm2xpBusinessException {
 
 		String objectDsfText = object.asObjDsfText();
@@ -413,23 +413,25 @@ public class Xplane10TranslatorImpl implements ITranslator {
 		// process the node if we're on a single pass mode.
 		// if not on single pass, only process if the node is on the current
 		// lat/long tile
-		if ((!GuiOptionsHelper.getOptions().isSinglePass() && GeomUtils
-				.compareCoordinates(currentTile, node))
-				|| GuiOptionsHelper.getOptions().isSinglePass()) {
-			// write a 3D object in the dsf file if this node is in an object
-			// rule
-			XplaneDsfObject object = dsfObjectsProvider
-					.getRandomDsfObjectIndexAndAngle(node.getTag(),
-							node.getId());
-			if (object != null) {
-				List<Node> nodes = new ArrayList<Node>();
-				nodes.add(node);
-				object.setPolygon(new OsmPolygon(node.getId(), node.getTag(),
-						nodes));
-				write3dObjectToDsf(object);
+		if (XplaneOptionsHelper.getOptions().isGenerateObj()) {
+			if ((!GuiOptionsHelper.getOptions().isSinglePass() && GeomUtils
+					.compareCoordinates(currentTile, node))
+					|| GuiOptionsHelper.getOptions().isSinglePass()) {
+				// write a 3D object in the dsf file if this node is in an
+				// object
+				// rule
+				XplaneDsf3DObject object = dsfObjectsProvider
+						.getRandomDsfObjectIndexAndAngle(node.getTag(),
+								node.getId());
+				if (object != null) {
+					List<Node> nodes = new ArrayList<Node>();
+					nodes.add(node);
+					object.setPolygon(new OsmPolygon(node.getId(), node
+							.getTag(), nodes));
+					writeObjectToDsf(object);
+				}
 			}
 		}
-
 	}
 
 	@Override
@@ -455,16 +457,31 @@ public class Xplane10TranslatorImpl implements ITranslator {
 			}
 			// try to transform those polygons into dsf objects.
 			for (OsmPolygon poly : polygons) {
+				// look for light rules
+				processLightObject(poly);
+
 				// try to generate a 3D object
 				if (!process3dObject(poly)) {
 					// nothing generated? try to generate a facade building.
 					if (!processBuilding(poly)) {
 						// nothing generated? try to generate a forest.
-						if (!processForest(poly)) {
-							// still nothing? try to generate a streetlight.
-							processStreetLights(poly);
-						}
+						processForest(poly);
 					}
+				}
+			}
+		}
+	}
+
+	private void processLightObject(OsmPolygon poly) {
+		if (XplaneOptionsHelper.getOptions().isGenerateLights()) {
+			XplaneDsfObject object = dsfObjectsProvider
+					.getRandomDsfLightObject(poly);
+			if (object != null) {
+				object.setPolygon(poly);
+				try {
+					writeObjectToDsf(object);
+
+				} catch (Osm2xpBusinessException e) {
 				}
 			}
 		}
@@ -528,18 +545,19 @@ public class Xplane10TranslatorImpl implements ITranslator {
 	 */
 	private boolean process3dObject(OsmPolygon osmPolygon) {
 		Boolean result = false;
-		// simplify shape if checked and if necessary
-		if (GuiOptionsHelper.getOptions().isSimplifyShapes()
-				&& !osmPolygon.isSimplePolygon()) {
-			osmPolygon.simplifyPolygon();
-		}
+
 		if (XplaneOptionsHelper.getOptions().isGenerateObj()) {
+			// simplify shape if checked and if necessary
+			if (GuiOptionsHelper.getOptions().isSimplifyShapes()
+					&& !osmPolygon.isSimplePolygon()) {
+				osmPolygon.simplifyPolygon();
+			}
 			XplaneDsfObject object = dsfObjectsProvider
 					.getRandomDsfObject(osmPolygon);
 			if (object != null) {
 				object.setPolygon(osmPolygon);
 				try {
-					write3dObjectToDsf(object);
+					writeObjectToDsf(object);
 					result = true;
 				} catch (Osm2xpBusinessException e) {
 					result = false;

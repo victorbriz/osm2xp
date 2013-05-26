@@ -19,7 +19,7 @@ import com.osm2xp.model.osm.Tag;
 		"polygonAngle", "sizeCheck", "xVectorMinLength","xVectorMaxLength", "yVectorMinLength","yVectorMaxLength",
 		"areaCheck", "minArea", "maxArea", "simplePolygonOnly",
 		"usePolygonAngle", "rotationPointX", "rotationPointY" })
-public class XplaneBuildingObjectTagRule extends TagsRules {
+public class XplaneBuildingObjectTagRule extends TagsRule {
 
 	protected int angle;
 	protected boolean randomAngle;

@@ -16,7 +16,7 @@ import com.osm2xp.model.osm.Tag;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "FacadeTagRule", propOrder = { "sizeMin", "sizeMax" })
-public class FacadeTagRule extends TagsRules {
+public class FacadeTagRule extends TagsRule {
 
 	protected int sizeMin;
 	protected int sizeMax;

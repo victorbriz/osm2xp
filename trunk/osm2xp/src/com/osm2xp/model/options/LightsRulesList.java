@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
 public class LightsRulesList {
 
 	@XmlElement(required = true)
-	protected List<LightTagRule> rules;
+	protected List<XplaneLightTagRule> rules;
 
 	/**
 	 * Default no-arg constructor
@@ -33,7 +33,7 @@ public class LightsRulesList {
 	 * Fully-initialising value constructor
 	 * 
 	 */
-	public LightsRulesList(final List<LightTagRule> rules) {
+	public LightsRulesList(final List<XplaneLightTagRule> rules) {
 		this.rules = rules;
 	}
 
@@ -56,13 +56,13 @@ public class LightsRulesList {
 	 * 
 	 * <p>
 	 * Objects of the following type(s) are allowed in the list
-	 * {@link LightTagRule }
+	 * {@link XplaneLightTagRule }
 	 * 
 	 * 
 	 */
-	public List<LightTagRule> getRules() {
+	public List<XplaneLightTagRule> getRules() {
 		if (rules == null) {
-			rules = new ArrayList<LightTagRule>();
+			rules = new ArrayList<XplaneLightTagRule>();
 		}
 		return this.rules;
 	}

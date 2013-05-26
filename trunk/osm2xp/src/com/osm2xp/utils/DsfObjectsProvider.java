@@ -3,12 +3,8 @@ package com.osm2xp.utils;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 import math.geom2d.polygon.LinearRing2D;
 
@@ -19,10 +15,14 @@ import com.osm2xp.model.facades.Facade;
 import com.osm2xp.model.facades.FacadeSet;
 import com.osm2xp.model.options.FacadeTagRule;
 import com.osm2xp.model.options.ForestTagRule;
+import com.osm2xp.model.options.TagsRule;
+import com.osm2xp.model.options.XplaneLightTagRule;
 import com.osm2xp.model.options.ObjectFile;
 import com.osm2xp.model.options.XplaneObjectTagRule;
 import com.osm2xp.model.osm.OsmPolygon;
 import com.osm2xp.model.osm.Tag;
+import com.osm2xp.model.xplane.XplaneDsf3DObject;
+import com.osm2xp.model.xplane.XplaneDsfLightObject;
 import com.osm2xp.model.xplane.XplaneDsfObject;
 import com.osm2xp.utils.helpers.XplaneOptionsHelper;
 import com.osm2xp.utils.logging.Osm2xpLogger;
@@ -40,23 +40,27 @@ public class DsfObjectsProvider {
 	private List<String> facadesList = new ArrayList<String>();
 	private List<String> forestsList = new ArrayList<String>();
 	private List<String> polygonsList = new ArrayList<String>();
-	private List<String> streetLightObjectsList = new ArrayList<String>();
+	private List<String> lightsObjectsList = new ArrayList<String>();
+
 	private FacadeSet facadeSet;
 	private List<Facade> slopedHousesList;
 	private List<Facade> facadesWithRoofColorList;
-	private Map<String, Integer> dsfRessourceList = new HashMap<String, Integer>();
 
 	/**
 	 * @param facadeSet
 	 */
 	public DsfObjectsProvider(FacadeSet facadeSet) {
 		this.facadeSet = facadeSet;
+		computePolygonsList();
+		computeObjectsList();
 	}
 
 	/**
 	 * @param facadeSet
 	 */
 	public DsfObjectsProvider() {
+		computePolygonsList();
+		computeObjectsList();
 	}
 
 	/**
@@ -164,7 +168,7 @@ public class DsfObjectsProvider {
 			for (Facade facade : this.getSlopedHousesList()) {
 				if ((facade.getMinVectorLength() <= minVector && facade
 						.getMaxVectorLength() >= minVector)) {
-					return getIndexOfDsfRessource(facade.getFile());
+					return polygonsList.indexOf(facade.getFile());
 				}
 			}
 		}
@@ -224,7 +228,7 @@ public class DsfObjectsProvider {
 		}
 
 		if (facadeResult != null) {
-			result = getIndexOfDsfRessource(facadeResult.getFile());
+			result = polygonsList.indexOf(facadeResult.getFile());
 		}
 
 		return result;
@@ -236,7 +240,7 @@ public class DsfObjectsProvider {
 			for (Facade facade : this.facadeSet.getFacades()) {
 				if ((facade.isCommercial() || facade.isIndustrial())
 						&& !facade.isSimpleBuildingOnly()) {
-					return getIndexOfDsfRessource(facade.getFile());
+					return polygonsList.indexOf(facade.getFile());
 				}
 			}
 		}
@@ -258,7 +262,7 @@ public class DsfObjectsProvider {
 							&& (facade.getMaxHeight() == 0 || (facade
 									.getMaxHeight() != 0 && facade
 									.getMaxHeight() >= height))) {
-						return getIndexOfDsfRessource(facade.getFile());
+						return polygonsList.indexOf(facade.getFile());
 					}
 				}
 			}
@@ -283,7 +287,7 @@ public class DsfObjectsProvider {
 						&& facade.isSloped()
 						&& (facade.getMinVectorLength() <= minVector && facade
 								.getMaxVectorLength() >= minVector)) {
-					return getIndexOfDsfRessource(facade.getFile());
+					return polygonsList.indexOf(facade.getFile());
 				}
 			}
 		}
@@ -299,25 +303,11 @@ public class DsfObjectsProvider {
 			Collections.shuffle(facadeSet.getFacades());
 			for (Facade facade : this.facadeSet.getFacades()) {
 				if (facade.isResidential() && !facade.isSimpleBuildingOnly()) {
-					return getIndexOfDsfRessource(facade.getFile());
+					return polygonsList.indexOf(facade.getFile());
 				}
 			}
 		}
 		return null;
-	}
-
-	private int getIndexOfDsfRessource(String ressource) {
-
-		// check existing ressource
-		for (int i = 0; i < polygonsList.size(); i++) {
-			if (polygonsList.get(i).equals(ressource)) {
-				return i;
-			}
-		}
-		// ressource not in dsf list, add it
-		polygonsList.add(ressource);
-		return polygonsList.size() - 1;
-
 	}
 
 	/**
@@ -331,7 +321,7 @@ public class DsfObjectsProvider {
 			for (Facade facade : this.facadeSet.getFacades()) {
 				if (facade.isResidential() && facade.isSimpleBuildingOnly()
 						&& !facade.isSloped()) {
-					return getIndexOfDsfRessource(facade.getFile());
+					return polygonsList.indexOf(facade.getFile());
 				}
 			}
 		}
@@ -372,14 +362,90 @@ public class DsfObjectsProvider {
 				}
 			}
 			if (facadeResult != null) {
-				result = getIndexOfDsfRessource(facadeResult.getFile());
+				result = polygonsList.indexOf(facadeResult.getFile());
 			}
 		}
 		return result;
 
 	}
 
-	
+	/**
+	 * @param facadeSet
+	 * @throws Osm2xpBusinessException
+	 */
+	public void computePolygonsList() {
+
+		facadesList.clear();
+		forestsList.clear();
+		polygonsList.clear();
+		singlesFacadesList.clear();
+
+		// FORESTS RULES
+		if (XplaneOptionsHelper.getOptions().isGenerateFor()) {
+
+			for (ForestTagRule forest : XplaneOptionsHelper.getOptions()
+					.getForestsRules().getRules()) {
+				for (ObjectFile file : forest.getObjectsFiles()) {
+					if (!forestsList.contains(file.getPath())) {
+						forestsList.add(file.getPath());
+					}
+
+				}
+			}
+			polygonsList.addAll(forestsList);
+
+		}
+		// FACADES RULES
+		if (!XplaneOptionsHelper.getOptions().getFacadesRules().getRules()
+				.isEmpty()) {
+			for (FacadeTagRule facadeTagRule : XplaneOptionsHelper.getOptions()
+					.getFacadesRules().getRules()) {
+				for (ObjectFile file : facadeTagRule.getObjectsFiles()) {
+					if (!singlesFacadesList.contains(file.getPath())) {
+						singlesFacadesList.add(file.getPath());
+					}
+				}
+			}
+			polygonsList.addAll(singlesFacadesList);
+		}
+
+		// BASIC BUILDINGS FACADES
+		if (XplaneOptionsHelper.getOptions().isGenerateBuildings()) {
+			for (Facade facade : facadeSet.getFacades()) {
+				facadesList.add(facade.getFile());
+			}
+			polygonsList.addAll(facadesList);
+		}
+
+	}
+
+	/**
+	 * 
+	 */
+	public void computeObjectsList() {
+		objectsList.clear();
+		// add 3D objects
+		for (XplaneObjectTagRule object : XplaneOptionsHelper.getOptions()
+				.getObjectsRules().getRules()) {
+			for (ObjectFile file : object.getObjectsFiles()) {
+				if (!objectsList.contains(file.getPath())) {
+					objectsList.add(file.getPath());
+				}
+
+			}
+		}
+
+		// add lights objects
+		for (XplaneLightTagRule object : XplaneOptionsHelper.getOptions()
+				.getLightsRules().getRules()) {
+			for (ObjectFile file : object.getObjectsFiles()) {
+				if (!objectsList.contains(file.getPath())) {
+					objectsList.add(file.getPath());
+				}
+
+			}
+		}
+	}
 
 	/**
 	 * @param facadeTagRule
@@ -388,26 +454,25 @@ public class DsfObjectsProvider {
 	public Integer getRandomSingleFacade(FacadeTagRule facadeTagRule) {
 		Collections.shuffle(singlesFacadesList);
 		String randomSingleFacade = singlesFacadesList.get(0);
-		return getIndexOfDsfRessource(randomSingleFacade);
+		return polygonsList.indexOf(randomSingleFacade);
 	}
 
 	/**
-	 * @param objectTagRule
+	 * @param tagRule
 	 * @return
 	 */
-	public Integer getRandomObject(XplaneObjectTagRule objectTagRule) {
-		Collections.shuffle(objectTagRule.getObjectsFiles());
-		String objectFile = objectTagRule.getObjectsFiles().get(0).getPath();
-		return getIndexOfDsfRessource(objectFile);
+	public Integer getRandomObject(TagsRule tagRule) {
+		Collections.shuffle(tagRule.getObjectsFiles());
+		String objectFile = tagRule.getObjectsFiles().get(0).getPath();
+		return objectsList.indexOf(objectFile);
 	}
 
 	/**
 	 * @return
 	 */
+	@Deprecated
 	public Integer getRandomStreetLightObject() {
-		Collections.shuffle(streetLightObjectsList);
-		String objectFile = streetLightObjectsList.get(0);
-		return getIndexOfDsfRessource(objectFile);
+		return null;
 	}
 
 	/**
@@ -417,7 +482,7 @@ public class DsfObjectsProvider {
 	public Integer getRandomForest(ForestTagRule forestTagRule) {
 		Collections.shuffle(forestTagRule.getObjectsFiles());
 		String forestFile = forestTagRule.getObjectsFiles().get(0).getPath();
-		return getIndexOfDsfRessource(forestFile);
+		return polygonsList.indexOf(forestFile);
 	}
 
 	/**
@@ -426,9 +491,9 @@ public class DsfObjectsProvider {
 	 * @param tags
 	 * @return
 	 */
-	public XplaneDsfObject getRandomDsfObjectIndexAndAngle(List<Tag> tags,
+	public XplaneDsf3DObject getRandomDsfObjectIndexAndAngle(List<Tag> tags,
 			Long id) {
-		XplaneDsfObject result = null;
+		XplaneDsf3DObject result = null;
 		for (Tag tag : tags) {
 			for (XplaneObjectTagRule objectTagRule : XplaneOptionsHelper
 					.getOptions().getObjectsRules().getRules()) {
@@ -436,7 +501,7 @@ public class DsfObjectsProvider {
 						.getTag().getValue()
 						.equalsIgnoreCase(String.valueOf(id)))
 						|| (OsmUtils.compareTags(objectTagRule.getTag(), tag))) {
-					result = new XplaneDsfObject();
+					result = new XplaneDsf3DObject();
 					result.setRule(objectTagRule);
 					result.setDsfIndex(getRandomObject(objectTagRule));
 					if (objectTagRule.isRandomAngle()) {
@@ -492,7 +557,7 @@ public class DsfObjectsProvider {
 									.isSimplePolygon());
 
 					if (checkArea && checkSize && checkSimplePoly) {
-						result = new XplaneDsfObject(osmPolygon, rule);
+						result = new XplaneDsf3DObject(osmPolygon, rule);
 						// compute object index
 						result.setDsfIndex(getRandomObject(rule));
 
@@ -600,21 +665,6 @@ public class DsfObjectsProvider {
 	}
 
 	/**
-	 * @return the streetLightObjectsList
-	 */
-	public List<String> getStreetLightObjectsList() {
-		return streetLightObjectsList;
-	}
-
-	/**
-	 * @param streetLightObjectsList
-	 *            the streetLightObjectsList to set
-	 */
-	public void setStreetLightObjectsList(List<String> streetLightObjectsList) {
-		this.streetLightObjectsList = streetLightObjectsList;
-	}
-
-	/**
 	 * 
 	 */
 	private void computeSlopedHousesFacadesList() {
@@ -654,12 +704,34 @@ public class DsfObjectsProvider {
 		return slopedHousesList;
 	}
 
-	public Map<String, Integer> getDsfRessourceList() {
-		return dsfRessourceList;
-	}
-
-	public void setDsfRessourceList(Map<String, Integer> dsfRessourceList) {
-		this.dsfRessourceList = dsfRessourceList;
+	public XplaneDsfObject getRandomDsfLightObject(OsmPolygon osmPolygon) {
+		XplaneDsfObject result = null;
+		// shuffle rules
+		List<XplaneLightTagRule> tagsRules = new ArrayList<XplaneLightTagRule>();
+		tagsRules.addAll(XplaneOptionsHelper.getOptions().getLightsRules()
+				.getRules());
+		Collections.shuffle(tagsRules);
+		for (Tag tag : osmPolygon.getTags()) {
+			for (XplaneLightTagRule rule : tagsRules) {
+				// check Tag matching
+				if ((rule.getTag().getKey().equalsIgnoreCase("id") && rule
+						.getTag().getValue()
+						.equalsIgnoreCase(String.valueOf(osmPolygon.getId())))
+						|| (OsmUtils.compareTags(rule.getTag(), tag))) {
+					// percentage check
+					Random rand=new Random();
+					int min=0;
+					int max=100;
+					int percentage = rand.nextInt(max - min + 1) + min;
+					if (percentage < rule.getPercentage()) {
+						result = new XplaneDsfLightObject(osmPolygon, rule);
+						// compute object index
+						result.setDsfIndex(getRandomObject(rule));
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 }

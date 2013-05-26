@@ -16,7 +16,7 @@ import com.osm2xp.model.osm.Tag;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ObjectTagRule", propOrder = { "angle", "randomAngle" })
-public class ObjectTagRule extends TagsRules {
+public class ObjectTagRule extends TagsRule {
 
 	protected int angle;
 	protected boolean randomAngle;
