@@ -67,9 +67,7 @@ public class XplaneDsf3DObject extends XplaneDsfObject {
 				// the object
 				if (dimensionsCheck) {
 					result = new XplaneObjGeoRef();
-					result.origin = GeomUtils.getRotationPoint(ptOrigin, ptX,
-							ptY, ptLast, rule.getRotationPointX(),
-							rule.getRotationPointY());
+					result.origin = ptOrigin;
 
 					// compute angle
 					// GeodeticCalculator gc = new GeodeticCalculator();
