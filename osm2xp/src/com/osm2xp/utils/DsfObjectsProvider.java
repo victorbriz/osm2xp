@@ -545,8 +545,8 @@ public class DsfObjectsProvider {
 									.getMinArea() && osmPolygon.getArea() < rule
 									.getMaxArea()));
 
-					Boolean checkSize = GeomUtils
-							.isRectangleBigEnoughForObject(
+					Boolean checkSize = !rule.isSizeCheck()
+							|| GeomUtils.isRectangleBigEnoughForObject(
 									rule.getxVectorMaxLength(),
 									rule.getyVectorMaxLength(),
 									rule.getxVectorMinLength(),
@@ -719,9 +719,9 @@ public class DsfObjectsProvider {
 						.equalsIgnoreCase(String.valueOf(osmPolygon.getId())))
 						|| (OsmUtils.compareTags(rule.getTag(), tag))) {
 					// percentage check
-					Random rand=new Random();
-					int min=0;
-					int max=100;
+					Random rand = new Random();
+					int min = 0;
+					int max = 100;
 					int percentage = rand.nextInt(max - min + 1) + min;
 					if (percentage < rule.getPercentage()) {
 						result = new XplaneDsfLightObject(osmPolygon, rule);
