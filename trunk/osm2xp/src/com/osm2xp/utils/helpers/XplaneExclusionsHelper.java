@@ -1,6 +1,8 @@
 package com.osm2xp.utils.helpers;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import math.geom2d.Box2D;
@@ -73,10 +75,26 @@ public class XplaneExclusionsHelper extends Thread {
 	}
 
 	public void optimiseExclusion() {
+		// sort all exclusions based on size
+		Comparator<Box2D> comparator = new Comparator<Box2D>() {
+
+			@Override
+			public int compare(Box2D box1, Box2D box2) {
+				Double size1 = box1.getWidth() * box1.getHeight();
+				Double size2 = box2.getWidth() * box2.getHeight();
+				return size1.compareTo(size2);
+			}
+		};
+		Collections.sort(exclusions, comparator);
+
+		// optimize
 		List<Box2D> footprintsToRemove = new ArrayList<Box2D>();
 		List<Box2D> footprintsToAdd = new ArrayList<Box2D>();
+
+		// FIXME so dirty... just for tests
 		optimisationLoop: for (Box2D footprint : exclusions) {
 			for (Box2D footprint2 : exclusions) {
+
 				if (footprint != footprint2
 						&& GeomUtils.boxContainsAnotherBox(footprint,
 								footprint2)) {
@@ -99,8 +117,8 @@ public class XplaneExclusionsHelper extends Thread {
 	public String exportExclusions() {
 		Osm2xpLogger.info("Obj exclusions size:" + exclusions.size()
 				+ " ,starting optimisation.");
-		optimiseExclusion();
 		removeSmallExclusions();
+		optimiseExclusion();
 		Osm2xpLogger.info("Optimisation done, Obj exclusions size:"
 				+ exclusions.size() + ".");
 

@@ -25,6 +25,8 @@ import com.osm2xp.jobs.GenerateTileJob;
 import com.osm2xp.jobs.MutexRule;
 import com.osm2xp.model.osm.Relation;
 import com.osm2xp.model.project.Coordinates;
+import com.osm2xp.parsers.relationsLister.RelationsLister;
+import com.osm2xp.parsers.relationsLister.RelationsListerFactory;
 import com.osm2xp.parsers.tilesLister.TilesLister;
 import com.osm2xp.parsers.tilesLister.TilesListerFactory;
 import com.osm2xp.utils.FilesUtils;
@@ -278,16 +280,16 @@ public class BuildController {
 			final String folderPath) {
 		final TilesLister tilesLister = TilesListerFactory
 				.getTilesLister(currentFile);
-		// final RelationsLister relationsLister = RelationsListerFactory
-		// .getRelationsLister(currentFile);
-		// Osm2xpLogger.info("Listing relations in file " +
-		// currentFile.getName());
-		// try {
-		// relationsLister.process();
-		// Osm2xpLogger.info(relationsLister.getRelationsList().size()+" relations found.");
-		// } catch (Osm2xpBusinessException e) {
-		// Osm2xpLogger.error(e.getMessage());
-		// }
+		final RelationsLister relationsLister = RelationsListerFactory
+				.getRelationsLister(currentFile);
+		Osm2xpLogger.info("Listing relations in file " + currentFile.getName());
+		try {
+			relationsLister.process();
+			Osm2xpLogger.info(relationsLister.getRelationsList().size()
+					+ " relations found.");
+		} catch (Osm2xpBusinessException e) {
+			Osm2xpLogger.error(e.getMessage());
+		}
 		Osm2xpLogger.info("Listing tiles in file " + currentFile.getName());
 		Job job = new Job("Listing tiles ") {
 			@Override
@@ -325,9 +327,8 @@ public class BuildController {
 				// launch a build for each tile
 				for (Point2D tuile : tilesList) {
 					try {
-						// generateSingleTile(currentFile, tuile, folderPath,
-						// relationsLister.getRelationsList());
-						generateSingleTile(currentFile, tuile, folderPath, null);
+						generateSingleTile(currentFile, tuile, folderPath,
+								relationsLister.getRelationsList());
 					} catch (Osm2xpBusinessException e) {
 						Osm2xpLogger.error("Error generating tile", e);
 						canceling();
