@@ -68,23 +68,7 @@ public class XplaneDsf3DObject extends XplaneDsfObject {
 				if (dimensionsCheck) {
 					result = new XplaneObjGeoRef();
 					result.origin = ptOrigin;
-
-					// compute angle
-					// GeodeticCalculator gc = new GeodeticCalculator();
-					// gc.setStartingGeographicPoint(ptOrigin);
-					// gc.setDestinationGeographicPoint(ptX);
-					//
-					// Float test = (float) Math.toDegrees(Math.atan2(ptX.x
-					// - ptOrigin.x, ptX.y - ptOrigin.y));
-					Double anglePoly = Math.toDegrees(Math.atan2(ptX.x
-							- ptOrigin.x, ptX.y - ptOrigin.y));
-					if (anglePoly > 0) {
-						anglePoly = 360 - anglePoly;
-					} else {
-						anglePoly = Math.abs(anglePoly);
-					}
-
-					result.angle = anglePoly.intValue();
+					result.angle = GeomUtils.getBearing(ptOrigin.x, ptOrigin.y, ptY.x, ptY.y);
 				}
 
 				if (result != null)
@@ -124,9 +108,9 @@ public class XplaneDsf3DObject extends XplaneDsfObject {
 		XplaneObjGeoRef result = new XplaneObjGeoRef();
 		result.origin = GeomUtils.getPolygonCenter(osmPolygon.getPolygon());
 		if (rule.isRandomAngle()) {
-			result.angle = MiscUtils.getRandomSize(0, 360);
+			result.angle = Double.valueOf(MiscUtils.getRandomSize(0, 360));
 		} else {
-			result.angle = rule.getAngle();
+			result.angle = Double.valueOf(rule.getAngle());
 		}
 		return result;
 	}
@@ -135,9 +119,9 @@ public class XplaneDsf3DObject extends XplaneDsfObject {
 		XplaneObjGeoRef result = new XplaneObjGeoRef();
 		result.origin = osmPolygon.getPolygon().getFirstPoint();
 		if (rule.isRandomAngle()) {
-			result.angle = MiscUtils.getRandomSize(0, 360);
+			result.angle = Double.valueOf(MiscUtils.getRandomSize(0, 360));
 		} else {
-			result.angle = rule.getAngle();
+			result.angle = Double.valueOf(rule.getAngle());
 		}
 		return result;
 	}
@@ -173,7 +157,7 @@ public class XplaneDsf3DObject extends XplaneDsfObject {
 	 */
 	private class XplaneObjGeoRef {
 		protected Point2D origin;
-		protected Integer angle;
+		protected Double angle;
 
 	}
 }

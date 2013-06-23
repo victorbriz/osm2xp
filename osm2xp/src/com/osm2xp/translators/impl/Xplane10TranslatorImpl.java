@@ -105,8 +105,10 @@ public class Xplane10TranslatorImpl implements ITranslator {
 	@Override
 	public void complete() {
 
-		// if smart exclusions enabled, send them to writer
-		if (XplaneOptionsHelper.getOptions().isSmartExclusions()) {
+		// if smart exclusions enabled and tile is not empty, send them to
+		// writer
+		if (!StatsHelper.isTileEmpty(stats)
+				&& XplaneOptionsHelper.getOptions().isSmartExclusions()) {
 			String exclusions = exclusionsHelper.exportExclusions();
 			writer.complete(exclusions);
 
@@ -115,8 +117,10 @@ public class Xplane10TranslatorImpl implements ITranslator {
 		}
 
 		if (!StatsHelper.isTileEmpty(stats)) {
-			Osm2xpLogger.info("stats : " + stats.getBuildingsNumber()
-					+ " buildings, " + stats.getForestsNumber() + " forests, "
+			Osm2xpLogger.info("Tile " + (int) currentTile.x + "/"
+					+ (int) currentTile.y + " stats : "
+					+ stats.getBuildingsNumber() + " buildings, "
+					+ stats.getForestsNumber() + " forests, "
 					+ stats.getStreetlightsNumber() + " street lights, "
 					+ stats.getObjectsNumber() + " objects. (generation took "
 					+ MiscUtils.getTimeDiff(startTime, new Date()) + ")");

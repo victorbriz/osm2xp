@@ -698,6 +698,35 @@ public class GeomUtils {
 		return result;
 	}
 
+	public static double RadToDeg(double radians) {
+		return radians * (180 / Math.PI);
+	}
+
+	public static double DegToRad(double degrees) {
+		return degrees * (Math.PI / 180);
+	}
+
+	public static double getBearing(double lat1, double long1, double lat2,
+			double long2) {
+		// Convert input values to radians
+		lat1 = DegToRad(lat1);
+		long1 = DegToRad(long1);
+		lat2 = DegToRad(lat2);
+		long2 = DegToRad(long2);
+
+		double deltaLong = long2 - long1;
+
+		double y = Math.sin(deltaLong) * Math.cos(lat2);
+		double x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1)
+				* Math.cos(lat2) * Math.cos(deltaLong);
+		double bearing = Math.atan2(y, x);
+		return ConvertToBearing(RadToDeg(bearing));
+	}
+
+	public static double ConvertToBearing(double deg) {
+		return (deg + 360) % 360;
+	}
+
 	/**
 	 * lod13 algo by Jeema
 	 * 
@@ -790,13 +819,13 @@ public class GeomUtils {
 		}
 
 		// check intersections
-//		for (LinearShape2D line : box1.getEdges()) {
-//			for (LinearShape2D line2 : box2.getEdges()) {
-//				if (line.getIntersection(line2) != null) {
-//					return true;
-//				}
-//			}
-//		}
+		// for (LinearShape2D line : box1.getEdges()) {
+		// for (LinearShape2D line2 : box2.getEdges()) {
+		// if (line.getIntersection(line2) != null) {
+		// return true;
+		// }
+		// }
+		// }
 
 		return false;
 	}

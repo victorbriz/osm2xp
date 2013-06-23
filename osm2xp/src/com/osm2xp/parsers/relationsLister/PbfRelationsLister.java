@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.osm2xp.exceptions.Osm2xpBusinessException;
+import com.osm2xp.model.osm.Member;
 import com.osm2xp.model.osm.Relation;
 
 import crosby.binary.BinaryParser;
@@ -43,6 +44,29 @@ public class PbfRelationsLister extends BinaryParser implements RelationsLister 
 
 	@Override
 	protected void parseRelations(List<crosby.binary.Osmformat.Relation> rels) {
+		if (rels != null && rels.size() > 0) {
+			for (crosby.binary.Osmformat.Relation rel : rels) {
+				Relation relation = new Relation();
+				relation.setId(rel.getId());
+				for (int i = 0; i < rel.getMemidsList().size(); i++) {
+					Member member = new Member();
+					member.setRef(rel.getMemidsList().get(i).toString());
+					switch (rel.getRolesSidList().get(i)) {
+					case 18:
+						member.setRole("inner");
+						break;
+					case 2:
+						member.setRole("outter");
+						break;
+					default:
+						break;
+					}
+					member.setType(rel.getTypesList().get(i).toString());
+					relation.getMember().add(member);
+				}
+				relationsList.add(relation);
+			}
+		}
 	}
 
 	@Override
