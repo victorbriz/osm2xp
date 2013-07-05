@@ -165,7 +165,6 @@ public class DsfWriterImpl implements IWriter {
 			while ((line = br.readLine()) != null) {
 				if (!exclusionInjected
 						&& line.contains(XplaneConstants.EXCLUSION_PLACEHOLDER)) {
-					FilesUtils.writeTextToFile(tempFile, exclusionText, true);
 					output.write(exclusionText);
 					exclusionInjected = true;
 				} else {

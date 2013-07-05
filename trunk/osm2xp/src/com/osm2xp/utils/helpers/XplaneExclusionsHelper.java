@@ -1,9 +1,13 @@
 package com.osm2xp.utils.helpers;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import math.geom2d.Box2D;
 import math.geom2d.Point2D;
@@ -123,6 +127,12 @@ public class XplaneExclusionsHelper extends Thread {
 				+ exclusions.size() + ".");
 
 		StringBuilder sbBuilder = new StringBuilder();
+		DecimalFormatSymbols formatSymbols = new DecimalFormatSymbols(
+				Locale.ENGLISH);
+		NumberFormat numberFormat = new DecimalFormat(
+				"#.############################################################",
+				formatSymbols);
+
 		for (Box2D exclusion : exclusions) {
 			Double xMin = null;
 			Double xMax = null;
@@ -148,8 +158,12 @@ public class XplaneExclusionsHelper extends Thread {
 				}
 
 			}
-			sbBuilder.append("PROPERTY sim/exclude_obj " + yMin + "/" + xMin
-					+ "/" + yMax + "/" + xMax + "\n");
+
+			sbBuilder.append("PROPERTY sim/exclude_obj "
+					+ numberFormat.format(yMin) + "/"
+					+ numberFormat.format(xMin) + "/"
+					+ numberFormat.format(yMax) + "/"
+					+ numberFormat.format(xMax) + "\n");
 
 		}
 		return sbBuilder.toString();
