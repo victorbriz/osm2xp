@@ -42,8 +42,8 @@ public class XplaneExclusionsHelper extends Thread {
 
 				if (distanceBetweenPolygons < XplaneOptionsHelper.getOptions()
 						.getSmartExclusionDistance()) {
-					Box2D newFootprint = footprint.merge(osmPolygon
-							.getPolygon().getBoundingBox());
+					Box2D newFootprint = footprint.merge(new Box2D(osmPolygon
+							.getPolygon().getAsAWTShape().getBounds2D()));
 
 					footprintsToRemove.add(footprint);
 					footprintsToAdd.add(newFootprint);
@@ -53,7 +53,8 @@ public class XplaneExclusionsHelper extends Thread {
 
 			}
 			if (!exclusionAdded) {
-				exclusions.add(osmPolygon.getPolygon().getBoundingBox());
+				exclusions.add(new Box2D(osmPolygon.getPolygon()
+						.getAsAWTShape().getBounds2D()));
 			}
 			if (!footprintsToRemove.isEmpty()) {
 				exclusions.removeAll(footprintsToRemove);
@@ -62,9 +63,9 @@ public class XplaneExclusionsHelper extends Thread {
 				exclusions.addAll(footprintsToAdd);
 			}
 		} else {
-			exclusions.add(osmPolygon.getPolygon().getBoundingBox());
+			exclusions.add(new Box2D(osmPolygon.getPolygon().getAsAWTShape()
+					.getBounds2D()));
 		}
-		// System.out.println("add Exclusion, size:"+exclusions.size());
 	}
 
 	public void removeSmallExclusions() {
